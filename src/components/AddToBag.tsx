@@ -71,9 +71,9 @@ export default function AddToBag({ onAdd, statusText }: Props) {
         onClick={handleClick}
         aria-label="Add to bag"
         style={{
-          marginTop: 32,
-          width: 56,
-          height: 56,
+          marginTop: 24,
+          width: 44,
+          height: 44,
           border: 0,
           background: "none",
           cursor: "pointer",
@@ -149,33 +149,11 @@ export default function AddToBag({ onAdd, statusText }: Props) {
         </div>
       </button>
 
-      {/* Underline bar that draws in */}
-      <div
-        style={{
-          width: 30,
-          height: 1,
-          marginTop: 8,
-          overflow: "hidden",
-        }}
-      >
-        {animating && (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              background: "var(--text)",
-              transformOrigin: "left",
-              animation: "bar-draw 0.4s 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both",
-            }}
-          />
-        )}
-      </div>
-
       {/* Typewriter status text */}
       <div
         style={{
-          height: 20,
-          marginTop: 6,
+          minHeight: currentText ? 18 : 0,
+          marginTop: currentText ? 6 : 0,
           fontSize: 12,
           letterSpacing: "0.08em",
           color: "var(--text-muted)",

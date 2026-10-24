@@ -11,16 +11,16 @@ export type Product = {
 export const products: Product[] = [
   {
     slug: "ts-01-oversize-tee",
-    name: "TS-01 OVERSIZE TEE",
-    price: 3000,
+    name: "CMB-01 OVERSIZE TEE",
+    price: 4000,
     category: "TEES",
     description:
       "Heavyweight 240gsm cotton oversize tee. Drop shoulder, ribbed crew neck, relaxed boxy fit. Pre-shrunk garment-dyed fabric with a lived-in softness from day one.",
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      { src: "/images/tee-front.webp", alt: "TS-01 Oversize Tee — front" },
-      { src: "/images/tee-back.webp", alt: "TS-01 Oversize Tee — back" },
-      { src: "/images/tee-side.png", alt: "TS-01 Oversize Tee — side" },
+      { src: "/images/tee-front.webp", alt: "CMB-01 Oversize Tee — front" },
+      { src: "/images/tee-back.webp", alt: "CMB-01 Oversize Tee — back" },
+      { src: "/images/tee-side.png", alt: "CMB-01 Oversize Tee — side" },
     ],
   },
 ];

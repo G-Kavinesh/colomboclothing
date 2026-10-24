@@ -57,7 +57,7 @@ a:hover {
 /* Mobile responsive utilities */
 @media (max-width: 640px) {
   .header-nav {
-    grid-template-columns: 1fr auto 1fr !important;
+    grid-template-columns: 1fr auto !important;
     padding: 16px 16px !important;
     font-size: 11px !important;
     gap: 10px !important;
@@ -68,7 +68,19 @@ a:hover {
   }
 
   .header-nav-links-mobile {
-    display: flex !important;
+    display: none !important;
+  }
+
+  .header-brand {
+    justify-self: start !important;
+  }
+
+  .header-right {
+    gap: 14px !important;
+  }
+
+  .header-right .header-shop-mobile {
+    display: inline !important;
   }
 
   .checkout-grid-2col {

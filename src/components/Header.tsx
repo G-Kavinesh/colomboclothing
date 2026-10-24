@@ -59,21 +59,32 @@ export default function Header() {
         </a>
       </div>
 
-      {/* Mobile: just show shop link */}
+      {/* Mobile: hidden placeholder to keep grid intact — shop moved to right side */}
       <div
         className="header-nav-links-mobile"
         style={{ justifySelf: "start", display: "none" }}
-      >
-        <Link href="/shop" style={{ color: "var(--text)", fontWeight: 400 }}>
-          shop
-        </Link>
-      </div>
+      />
 
-      <Link href="/" style={{ color: "var(--text)", fontWeight: 600 }}>
+      <Link
+        href="/"
+        className="header-brand"
+        style={{ color: "var(--text)", fontWeight: 600, justifySelf: "center" }}
+      >
         colomboclothing.com
       </Link>
 
-      <div style={{ justifySelf: "end", display: "flex", alignItems: "center", gap: 12, whiteSpace: "nowrap" }}>
+      <div
+        className="header-right"
+        style={{ justifySelf: "end", display: "flex", alignItems: "center", gap: 12, whiteSpace: "nowrap" }}
+      >
+        {/* Shop link — only visible on mobile, next to BAG */}
+        <Link
+          href="/shop"
+          className="header-shop-mobile"
+          style={{ color: "var(--text)", fontWeight: 400, display: "none" }}
+        >
+          shop
+        </Link>
         <Link
           ref={bagRef}
           href="/cart"
@@ -84,7 +95,7 @@ export default function Header() {
             display: "inline-block",
           }}
         >
-          BAG ({totalItems})
+          bag ({totalItems})
         </Link>
         <button
           onClick={toggleTheme}
@@ -98,6 +109,7 @@ export default function Header() {
             cursor: "pointer",
             background: theme === "dark" ? "var(--text)" : "transparent",
             transition: "background 0.2s",
+            flexShrink: 0,
           }}
         />
       </div>
