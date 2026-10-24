@@ -3,16 +3,20 @@
 import { useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SizeGuide from "@/components/SizeGuide";
 import AddToBag from "@/components/AddToBag";
 import { useCart } from "@/lib/cart-context";
-import { getProduct, formatPrice } from "@/lib/products";
+import { useProducts } from "@/lib/product-context";
+import { formatPrice } from "@/lib/products";
 
 export default function ProductDetail({ slug }: { slug: string }) {
+  const { getProduct } = useProducts();
   const product = getProduct(slug);
   const { addItem } = useCart();
+  const router = useRouter();
   const [imageIndex, setImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [status, setStatus] = useState("");
@@ -36,7 +40,7 @@ export default function ProductDetail({ slug }: { slug: string }) {
             PRODUCT NOT FOUND
           </h1>
           <Link
-            href="/shop"
+            href="/"
             style={{
               marginTop: 24,
               fontSize: 13,
@@ -46,7 +50,7 @@ export default function ProductDetail({ slug }: { slug: string }) {
               paddingBottom: 2,
             }}
           >
-            BACK TO SHOP
+            BACK TO HOME
           </Link>
         </main>
         <Footer />
@@ -96,10 +100,11 @@ export default function ProductDetail({ slug }: { slug: string }) {
             fontSize: 12,
             letterSpacing: "0.08em",
             color: "var(--text-muted)",
+            textAlign: "center",
           }}
         >
-          <Link href="/shop" style={{ color: "var(--text-muted)" }}>
-            SHOP
+          <Link href="/" style={{ color: "var(--text-muted)" }}>
+            HOME
           </Link>
           <span style={{ margin: "0 8px" }}>/</span>
           <span style={{ color: "var(--text)" }}>{product.name}</span>
@@ -286,26 +291,71 @@ export default function ProductDetail({ slug }: { slug: string }) {
           })}
         </div>
 
-        {/* Size Guide Link */}
-        <button
-          onClick={() => setSizeGuideOpen(true)}
-          style={{
-            marginTop: 20,
-            border: 0,
-            background: "none",
-            cursor: "pointer",
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            color: "var(--text-muted)",
-            borderBottom: "1px solid var(--border-light)",
-            paddingBottom: 2,
-            font: "400 12px 'IBM Plex Mono', monospace",
-          }}
-        >
-          SIZE GUIDE
-        </button>
+        {/* Size Guide Link — only for tees */}
+        {product.category === "TEES" && (
+          <button
+            onClick={() => setSizeGuideOpen(true)}
+            style={{
+              marginTop: 20,
+              border: 0,
+              background: "none",
+              cursor: "pointer",
+              fontSize: 12,
+              letterSpacing: "0.08em",
+              color: "var(--text-muted)",
+              borderBottom: "1px solid var(--border-light)",
+              paddingBottom: 2,
+              font: "400 12px 'IBM Plex Mono', monospace",
+            }}
+          >
+            SIZE GUIDE
+          </button>
+        )}
 
-        <AddToBag onAdd={addToBag} statusText={status} />
+        {product.preorder ? (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 24 }}>
+            {product.preorderNote && (
+              <div style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)", marginBottom: 16 }}>
+                {product.preorderNote}
+              </div>
+            )}
+            <button
+              onClick={() => {
+                if (!selectedSize) {
+                  setStatus("SELECT A SIZE");
+                  return;
+                }
+                router.push(`/preorder/${product.slug}?size=${selectedSize}`);
+              }}
+              style={{
+                width: "100%",
+                maxWidth: 280,
+                height: 48,
+                border: 0,
+                background: "var(--btn-bg)",
+                color: "var(--btn-text)",
+                font: "500 13px 'IBM Plex Mono', monospace",
+                letterSpacing: "0.08em",
+                cursor: "pointer",
+              }}
+            >
+              PREORDER
+            </button>
+            <div
+              style={{
+                minHeight: status ? 18 : 0,
+                marginTop: status ? 8 : 0,
+                fontSize: 12,
+                letterSpacing: "0.08em",
+                color: "var(--text-muted)",
+              }}
+            >
+              {status}
+            </div>
+          </div>
+        ) : (
+          <AddToBag onAdd={addToBag} statusText={status} />
+        )}
 
         <SizeGuide open={sizeGuideOpen} onClose={() => setSizeGuideOpen(false)} />
       </main>

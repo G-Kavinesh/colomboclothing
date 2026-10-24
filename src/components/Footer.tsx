@@ -35,11 +35,11 @@ export default function Footer() {
         <Image
           src="/images/colombo-logo.png"
           alt="Colombo"
-          width={220}
-          height={80}
+          width={120}
+          height={44}
           className="footer-logo"
           style={{
-            width: 220,
+            width: 120,
             height: "auto",
             display: "block",
           }}

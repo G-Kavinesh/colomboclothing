@@ -87,7 +87,7 @@ export default function SuccessPage() {
         </p>
 
         <Link
-          href="/shop"
+          href="/"
           style={{
             marginTop: 40,
             fontSize: 13,

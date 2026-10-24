@@ -48,7 +48,7 @@ export default function CartPage() {
               YOUR BAG IS EMPTY
             </div>
             <Link
-              href="/shop"
+              href="/"
               style={{
                 fontSize: 13,
                 fontWeight: 500,
@@ -217,7 +217,7 @@ export default function CartPage() {
                 CHECKOUT
               </Link>
               <Link
-                href="/shop"
+                href="/"
                 style={{
                   fontSize: 12,
                   letterSpacing: "0.08em",

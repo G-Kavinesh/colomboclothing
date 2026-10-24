@@ -164,19 +164,39 @@ export default function CheckoutPage() {
           >
             PAYMENT
           </div>
-          <div>
-            <label style={labelStyle}>CARD NUMBER</label>
-            <input type="text" name="cardNumber" required style={inputStyle} placeholder="XXXX XXXX XXXX XXXX" />
-          </div>
-          <div className="checkout-grid-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            <div>
-              <label style={labelStyle}>EXPIRY</label>
-              <input type="text" name="expiry" required style={inputStyle} placeholder="MM / YY" />
-            </div>
-            <div>
-              <label style={labelStyle}>CVV</label>
-              <input type="text" name="cvv" required style={inputStyle} placeholder="XXX" />
-            </div>
+          <div
+            style={{
+              padding: "16px 0",
+              fontSize: 13,
+              letterSpacing: "0.06em",
+              color: "var(--text-muted)",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <span
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: "50%",
+                border: "2px solid var(--text)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: "var(--text)",
+                }}
+              />
+            </span>
+            CASH ON DELIVERY
           </div>
 
           {/* Order Summary */}

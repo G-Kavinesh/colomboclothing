@@ -38,9 +38,6 @@ export default function Header() {
         className="header-nav-links"
         style={{ justifySelf: "start", display: "flex", gap: 20 }}
       >
-        <Link href="/shop" style={{ color: "var(--text)", fontWeight: 400 }}>
-          shop
-        </Link>
         <a
           href="https://instagram.com/"
           target="_blank"
@@ -77,14 +74,6 @@ export default function Header() {
         className="header-right"
         style={{ justifySelf: "end", display: "flex", alignItems: "center", gap: 12, whiteSpace: "nowrap" }}
       >
-        {/* Shop link — only visible on mobile, next to BAG */}
-        <Link
-          href="/shop"
-          className="header-shop-mobile"
-          style={{ color: "var(--text)", fontWeight: 400, display: "none" }}
-        >
-          shop
-        </Link>
         <Link
           ref={bagRef}
           href="/cart"

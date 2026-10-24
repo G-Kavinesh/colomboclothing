@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
 import { CartProvider } from "@/lib/cart-context";
 import { ThemeProvider } from "@/lib/theme-context";
+import { PreorderProvider } from "@/lib/preorder-context";
+import { ProductProvider } from "@/lib/product-context";
 import "./globals.css";
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -20,7 +22,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={ibmPlexMono.variable} suppressHydrationWarning>
       <body className={ibmPlexMono.className}>
         <ThemeProvider>
-          <CartProvider>{children}</CartProvider>
+          <ProductProvider>
+            <PreorderProvider>
+              <CartProvider>{children}</CartProvider>
+            </PreorderProvider>
+          </ProductProvider>
         </ThemeProvider>
       </body>
     </html>
