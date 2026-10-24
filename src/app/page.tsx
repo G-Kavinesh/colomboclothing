@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SizeGuide from "@/components/SizeGuide";
+import AddToBag from "@/components/AddToBag";
 import { useCart } from "@/lib/cart-context";
 import { products, formatPrice } from "@/lib/products";
 
@@ -21,10 +22,10 @@ export default function Home() {
   const prev = () => setImageIndex((i) => (i - 1 + imgs.length) % imgs.length);
   const next = () => setImageIndex((i) => (i + 1) % imgs.length);
 
-  const addToBag = () => {
+  const addToBag = useCallback(() => {
     if (!selectedSize) {
       setStatus("SELECT A SIZE");
-      return;
+      return false;
     }
     addItem({
       slug: featured.slug,
@@ -34,7 +35,8 @@ export default function Home() {
       image: featured.images[0].src,
     });
     setStatus(`ADDED — SIZE ${selectedSize}`);
-  };
+    return true;
+  }, [selectedSize, addItem]);
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -46,7 +48,7 @@ export default function Home() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "24px 20px 96px",
+          padding: "24px 20px 48px",
         }}
       >
         {/* Image Carousel */}
@@ -78,8 +80,8 @@ export default function Home() {
               style={{
                 width: 12,
                 height: 12,
-                borderLeft: "2.5px solid #111",
-                borderBottom: "2.5px solid #111",
+                borderLeft: "2.5px solid var(--text)",
+                borderBottom: "2.5px solid var(--text)",
                 transform: "rotate(45deg)",
                 marginLeft: 6,
               }}
@@ -93,7 +95,6 @@ export default function Home() {
               maxWidth: 620,
               aspectRatio: "1 / 1",
               justifySelf: "center",
-              mixBlendMode: "multiply",
               isolation: "isolate",
             }}
           >
@@ -105,7 +106,6 @@ export default function Home() {
                   inset: 0,
                   opacity: imageIndex === idx ? 1 : 0,
                   transition: "opacity 0.3s",
-                  filter: "brightness(1.06)",
                   pointerEvents: imageIndex === idx ? "auto" : "none",
                 }}
               >
@@ -138,8 +138,8 @@ export default function Home() {
               style={{
                 width: 12,
                 height: 12,
-                borderRight: "2.5px solid #111",
-                borderTop: "2.5px solid #111",
+                borderRight: "2.5px solid var(--text)",
+                borderTop: "2.5px solid var(--text)",
                 transform: "rotate(45deg)",
                 marginRight: 6,
               }}
@@ -161,7 +161,7 @@ export default function Home() {
                 border: 0,
                 borderRadius: "50%",
                 cursor: "pointer",
-                background: idx === imageIndex ? "#111" : "#cfcfcf",
+                background: idx === imageIndex ? "var(--text)" : "var(--dot-inactive)",
               }}
             />
           ))}
@@ -169,7 +169,7 @@ export default function Home() {
 
         <h1
           style={{
-            margin: "44px 0 0",
+            margin: "56px 0 0",
             fontSize: 18,
             fontWeight: 600,
             letterSpacing: "0.06em",
@@ -178,7 +178,7 @@ export default function Home() {
           {featured.name}
         </h1>
 
-        <div style={{ marginTop: 20, fontSize: 18, fontWeight: 500 }}>
+        <div style={{ marginTop: 28, fontSize: 18, fontWeight: 500 }}>
           {formatPrice(featured.price)}
         </div>
 
@@ -187,7 +187,7 @@ export default function Home() {
           style={{
             display: "flex",
             gap: 8,
-            marginTop: 28,
+            marginTop: 36,
             flexWrap: "wrap",
             justifyContent: "center",
           }}
@@ -208,9 +208,9 @@ export default function Home() {
                   font: "500 13px 'IBM Plex Mono', monospace",
                   letterSpacing: "0.06em",
                   cursor: "pointer",
-                  border: `1px solid ${isSelected ? "#111" : "#d6d3cc"}`,
-                  background: isSelected ? "#111" : "transparent",
-                  color: isSelected ? "#fff" : "#111",
+                  border: isSelected ? "1px solid var(--btn-bg)" : "1px solid var(--border-light)",
+                  background: isSelected ? "var(--btn-bg)" : "transparent",
+                  color: isSelected ? "var(--btn-text)" : "var(--text)",
                 }}
               >
                 {size}
@@ -223,14 +223,14 @@ export default function Home() {
         <button
           onClick={() => setSizeGuideOpen(true)}
           style={{
-            marginTop: 12,
+            marginTop: 20,
             border: 0,
             background: "none",
             cursor: "pointer",
             fontSize: 12,
             letterSpacing: "0.08em",
-            color: "#6b6b6b",
-            borderBottom: "1px solid #d6d3cc",
+            color: "var(--text-muted)",
+            borderBottom: "1px solid var(--border-light)",
             paddingBottom: 2,
             font: "400 12px 'IBM Plex Mono', monospace",
           }}
@@ -238,55 +238,7 @@ export default function Home() {
           SIZE GUIDE
         </button>
 
-        {/* Add to Bag */}
-        <button
-          onClick={addToBag}
-          aria-label="Add to bag"
-          style={{
-            marginTop: 24,
-            width: 56,
-            height: 56,
-            border: 0,
-            background: "none",
-            cursor: "pointer",
-            position: "relative",
-          }}
-        >
-          <span
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              width: 30,
-              height: 2.5,
-              background: "#111",
-              transform: "translate(-50%, -50%)",
-            }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              width: 2.5,
-              height: 30,
-              background: "#111",
-              transform: "translate(-50%, -50%)",
-            }}
-          />
-        </button>
-
-        <div
-          style={{
-            height: 20,
-            marginTop: 6,
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            color: "#6b6b6b",
-          }}
-        >
-          {status}
-        </div>
+        <AddToBag onAdd={addToBag} statusText={status} />
 
         <SizeGuide open={sizeGuideOpen} onClose={() => setSizeGuideOpen(false)} />
       </main>

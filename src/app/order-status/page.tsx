@@ -7,11 +7,11 @@ const inputStyle: React.CSSProperties = {
   width: "100%",
   height: 44,
   padding: "0 12px",
-  border: "1px solid #d6d3cc",
+  border: "1px solid var(--border-light)",
   background: "transparent",
   font: "400 13px 'IBM Plex Mono', monospace",
   letterSpacing: "0.04em",
-  color: "#111",
+  color: "var(--text)",
   boxSizing: "border-box",
 };
 
@@ -19,7 +19,7 @@ const labelStyle: React.CSSProperties = {
   fontSize: 11,
   fontWeight: 500,
   letterSpacing: "0.08em",
-  color: "#6b6b6b",
+  color: "var(--text-muted)",
   marginBottom: 6,
   display: "block",
 };
@@ -79,8 +79,8 @@ export default function OrderStatusPage() {
             width: "100%",
             height: 48,
             border: 0,
-            background: "#111",
-            color: "#fff",
+            background: "var(--btn-bg)",
+            color: "var(--btn-text)",
             font: "500 13px 'IBM Plex Mono', monospace",
             letterSpacing: "0.08em",
             cursor: "pointer",
@@ -96,7 +96,7 @@ export default function OrderStatusPage() {
           style={{
             marginTop: 32,
             padding: 24,
-            border: "1px solid #ebe7de",
+            border: "1px solid var(--border)",
           }}
         >
           <div
@@ -104,7 +104,7 @@ export default function OrderStatusPage() {
               fontSize: 13,
               fontWeight: 600,
               letterSpacing: "0.06em",
-              color: "#111",
+              color: "var(--text)",
               marginBottom: 16,
             }}
           >
@@ -122,7 +122,7 @@ export default function OrderStatusPage() {
               marginTop: 20,
               fontSize: 12,
               letterSpacing: "0.06em",
-              color: "#6b6b6b",
+              color: "var(--text-muted)",
             }}
           >
             Estimated delivery: 3–5 business days
@@ -149,16 +149,16 @@ function StatusStep({
           width: 10,
           height: 10,
           borderRadius: "50%",
-          background: done || active ? "#111" : "#d6d3cc",
-          border: active ? "2px solid #111" : "none",
-          boxShadow: active ? "0 0 0 3px rgba(17,17,17,0.15)" : "none",
+          background: done || active ? "var(--text)" : "var(--border-light)",
+          border: active ? "2px solid var(--text)" : "none",
+          boxShadow: active ? "0 0 0 3px var(--overlay)" : "none",
         }}
       />
       <span
         style={{
           fontSize: 12,
           letterSpacing: "0.08em",
-          color: done || active ? "#111" : "#6b6b6b",
+          color: done || active ? "var(--text)" : "var(--text-muted)",
           fontWeight: active ? 600 : 400,
         }}
       >

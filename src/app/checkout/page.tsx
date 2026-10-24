@@ -11,11 +11,11 @@ const inputStyle: React.CSSProperties = {
   width: "100%",
   height: 44,
   padding: "0 12px",
-  border: "1px solid #d6d3cc",
+  border: "1px solid var(--border-light)",
   background: "transparent",
   font: "400 13px 'IBM Plex Mono', monospace",
   letterSpacing: "0.04em",
-  color: "#111",
+  color: "var(--text)",
   boxSizing: "border-box",
 };
 
@@ -23,7 +23,7 @@ const labelStyle: React.CSSProperties = {
   fontSize: 11,
   fontWeight: 500,
   letterSpacing: "0.08em",
-  color: "#6b6b6b",
+  color: "var(--text-muted)",
   marginBottom: 6,
   display: "block",
 };
@@ -58,7 +58,7 @@ export default function CheckoutPage() {
             padding: "48px 20px",
           }}
         >
-          <div style={{ fontSize: 13, letterSpacing: "0.08em", color: "#6b6b6b" }}>
+          <div style={{ fontSize: 13, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
             NOTHING TO CHECKOUT
           </div>
         </main>
@@ -77,7 +77,7 @@ export default function CheckoutPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "48px 20px 96px",
+          padding: "48px 20px 48px",
         }}
       >
         <h1
@@ -127,7 +127,7 @@ export default function CheckoutPage() {
           >
             SHIPPING ADDRESS
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div className="checkout-grid-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
               <label style={labelStyle}>FIRST NAME</label>
               <input type="text" name="firstName" required style={inputStyle} />
@@ -141,7 +141,7 @@ export default function CheckoutPage() {
             <label style={labelStyle}>ADDRESS</label>
             <input type="text" name="address" required style={inputStyle} />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div className="checkout-grid-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
               <label style={labelStyle}>CITY</label>
               <input type="text" name="city" required style={inputStyle} />
@@ -168,7 +168,7 @@ export default function CheckoutPage() {
             <label style={labelStyle}>CARD NUMBER</label>
             <input type="text" name="cardNumber" required style={inputStyle} placeholder="XXXX XXXX XXXX XXXX" />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div className="checkout-grid-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
               <label style={labelStyle}>EXPIRY</label>
               <input type="text" name="expiry" required style={inputStyle} placeholder="MM / YY" />
@@ -184,8 +184,8 @@ export default function CheckoutPage() {
             style={{
               marginTop: 16,
               padding: "24px 0",
-              borderTop: "1px solid #ebe7de",
-              borderBottom: "1px solid #ebe7de",
+              borderTop: "1px solid var(--border)",
+              borderBottom: "1px solid var(--border)",
             }}
           >
             <div
@@ -206,7 +206,7 @@ export default function CheckoutPage() {
                   justifyContent: "space-between",
                   fontSize: 12,
                   letterSpacing: "0.06em",
-                  color: "#6b6b6b",
+                  color: "var(--text-muted)",
                   marginBottom: 8,
                 }}
               >
@@ -222,10 +222,10 @@ export default function CheckoutPage() {
                 justifyContent: "space-between",
                 fontSize: 12,
                 letterSpacing: "0.06em",
-                color: "#6b6b6b",
+                color: "var(--text-muted)",
                 marginTop: 12,
                 paddingTop: 12,
-                borderTop: "1px solid #ebe7de",
+                borderTop: "1px solid var(--border)",
               }}
             >
               <span>SHIPPING</span>
@@ -253,8 +253,8 @@ export default function CheckoutPage() {
               width: "100%",
               height: 48,
               border: 0,
-              background: submitting ? "#6b6b6b" : "#111",
-              color: "#fff",
+              background: submitting ? "var(--text-muted)" : "var(--btn-bg)",
+              color: "var(--btn-text)",
               font: "500 13px 'IBM Plex Mono', monospace",
               letterSpacing: "0.08em",
               cursor: submitting ? "default" : "pointer",

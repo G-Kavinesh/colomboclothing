@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer
       style={{
-        borderTop: "2px solid #ebe7de",
+        borderTop: "2px solid var(--border)",
         padding: "48px 20px 40px",
         display: "flex",
         flexDirection: "column",
@@ -14,6 +14,7 @@ export default function Footer() {
       }}
     >
       <nav
+        className="footer-nav"
         style={{
           display: "flex",
           flexWrap: "wrap",
@@ -36,16 +37,16 @@ export default function Footer() {
           alt="Colombo"
           width={220}
           height={80}
+          className="footer-logo"
           style={{
             width: 220,
             height: "auto",
             display: "block",
-            mixBlendMode: "multiply",
           }}
         />
       </Link>
-      <div style={{ fontSize: 12, letterSpacing: "0.08em", color: "#6b6b6b" }}>
-        &copy; 2026 COLOMBOCLOTHING.COM
+      <div className="footer-copy" style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
+        © colomboclothing.com · made in Sri Lanka 🇱🇰
       </div>
     </footer>
   );

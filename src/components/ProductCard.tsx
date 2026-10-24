@@ -11,7 +11,7 @@ export default function ProductCard({ product }: { product: Product }) {
         flexDirection: "column",
         alignItems: "center",
         textDecoration: "none",
-        color: "#111",
+        color: "var(--text)",
       }}
     >
       <div
@@ -19,7 +19,6 @@ export default function ProductCard({ product }: { product: Product }) {
           position: "relative",
           width: "100%",
           aspectRatio: "1 / 1",
-          mixBlendMode: "multiply",
           isolation: "isolate",
         }}
       >
@@ -27,10 +26,7 @@ export default function ProductCard({ product }: { product: Product }) {
           src={product.images[0].src}
           alt={product.images[0].alt}
           fill
-          style={{
-            objectFit: "contain",
-            filter: "brightness(1.06)",
-          }}
+          style={{ objectFit: "contain" }}
         />
       </div>
       <div
@@ -49,7 +45,7 @@ export default function ProductCard({ product }: { product: Product }) {
           marginTop: 8,
           fontSize: 13,
           fontWeight: 500,
-          color: "#6b6b6b",
+          color: "var(--text-muted)",
         }}
       >
         {formatPrice(product.price)}

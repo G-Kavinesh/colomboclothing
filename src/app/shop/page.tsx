@@ -18,7 +18,7 @@ export default function ShopPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "48px 20px 96px",
+          padding: "48px 20px 48px",
         }}
       >
         <h1
@@ -52,6 +52,7 @@ export default function ShopPage() {
           {products.map((product) => (
             <div
               key={product.slug}
+              className="shop-product-card"
               style={{
                 width: products.length <= 2 ? 280 : undefined,
               }}

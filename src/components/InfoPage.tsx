@@ -18,7 +18,7 @@ export default function InfoPage({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "48px 20px 96px",
+          padding: "48px 20px 48px",
         }}
       >
         <h1
@@ -38,7 +38,7 @@ export default function InfoPage({
             width: "100%",
             fontSize: 13,
             lineHeight: 1.8,
-            color: "#6b6b6b",
+            color: "var(--text-muted)",
           }}
         >
           {children}

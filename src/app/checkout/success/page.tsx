@@ -23,7 +23,7 @@ export default function SuccessPage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: "48px 20px 96px",
+          padding: "48px 20px 48px",
           textAlign: "center",
         }}
       >
@@ -32,7 +32,7 @@ export default function SuccessPage() {
             width: 56,
             height: 56,
             borderRadius: "50%",
-            border: "2.5px solid #111",
+            border: "2.5px solid var(--text)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -44,8 +44,8 @@ export default function SuccessPage() {
               display: "block",
               width: 14,
               height: 24,
-              borderRight: "2.5px solid #111",
-              borderBottom: "2.5px solid #111",
+              borderRight: "2.5px solid var(--text)",
+              borderBottom: "2.5px solid var(--text)",
               transform: "rotate(45deg) translate(-2px, -2px)",
             }}
           />
@@ -67,7 +67,7 @@ export default function SuccessPage() {
             marginTop: 16,
             fontSize: 12,
             letterSpacing: "0.08em",
-            color: "#6b6b6b",
+            color: "var(--text-muted)",
           }}
         >
           ORDER #{orderNumber}
@@ -79,7 +79,7 @@ export default function SuccessPage() {
             maxWidth: 400,
             fontSize: 13,
             lineHeight: 1.7,
-            color: "#6b6b6b",
+            color: "var(--text-muted)",
           }}
         >
           Thank you for your order. We&apos;ll send you a confirmation email with tracking
@@ -93,8 +93,8 @@ export default function SuccessPage() {
             fontSize: 13,
             fontWeight: 500,
             letterSpacing: "0.08em",
-            color: "#111",
-            borderBottom: "1px solid #111",
+            color: "var(--text)",
+            borderBottom: "1px solid var(--text)",
             paddingBottom: 2,
           }}
         >

@@ -20,7 +20,7 @@ export default function CartPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "48px 20px 96px",
+          padding: "48px 20px 48px",
         }}
       >
         <h1
@@ -44,7 +44,7 @@ export default function CartPage() {
               gap: 24,
             }}
           >
-            <div style={{ fontSize: 13, letterSpacing: "0.08em", color: "#6b6b6b" }}>
+            <div style={{ fontSize: 13, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
               YOUR BAG IS EMPTY
             </div>
             <Link
@@ -53,8 +53,8 @@ export default function CartPage() {
                 fontSize: 13,
                 fontWeight: 500,
                 letterSpacing: "0.08em",
-                color: "#111",
-                borderBottom: "1px solid #111",
+                color: "var(--text)",
+                borderBottom: "1px solid var(--text)",
                 paddingBottom: 2,
               }}
             >
@@ -67,12 +67,13 @@ export default function CartPage() {
             {items.map((item) => (
               <div
                 key={`${item.slug}-${item.size}`}
+                className="cart-item-grid"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "80px 1fr auto",
                   gap: 20,
                   padding: "24px 0",
-                  borderBottom: "1px solid #ebe7de",
+                  borderBottom: "1px solid var(--border)",
                   alignItems: "start",
                 }}
               >
@@ -83,14 +84,13 @@ export default function CartPage() {
                       position: "relative",
                       width: 80,
                       height: 80,
-                      mixBlendMode: "multiply",
                     }}
                   >
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
-                      style={{ objectFit: "contain", filter: "brightness(1.06)" }}
+                      style={{ objectFit: "contain" }}
                     />
                   </div>
                 </Link>
@@ -103,12 +103,12 @@ export default function CartPage() {
                       fontSize: 13,
                       fontWeight: 600,
                       letterSpacing: "0.06em",
-                      color: "#111",
+                      color: "var(--text)",
                     }}
                   >
                     {item.name}
                   </Link>
-                  <div style={{ fontSize: 12, letterSpacing: "0.08em", color: "#6b6b6b" }}>
+                  <div style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
                     SIZE: {item.size}
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8 }}>
@@ -117,10 +117,11 @@ export default function CartPage() {
                       style={{
                         width: 28,
                         height: 28,
-                        border: "1px solid #d6d3cc",
+                        border: "1px solid var(--border-light)",
                         background: "none",
                         cursor: "pointer",
                         font: "500 14px 'IBM Plex Mono', monospace",
+                        color: "var(--text)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -136,10 +137,11 @@ export default function CartPage() {
                       style={{
                         width: 28,
                         height: 28,
-                        border: "1px solid #d6d3cc",
+                        border: "1px solid var(--border-light)",
                         background: "none",
                         cursor: "pointer",
                         font: "500 14px 'IBM Plex Mono', monospace",
+                        color: "var(--text)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -155,7 +157,7 @@ export default function CartPage() {
                         cursor: "pointer",
                         fontSize: 11,
                         letterSpacing: "0.08em",
-                        color: "#6b6b6b",
+                        color: "var(--text-muted)",
                         marginLeft: 8,
                       }}
                     >
@@ -165,7 +167,7 @@ export default function CartPage() {
                 </div>
 
                 {/* Price */}
-                <div style={{ fontSize: 13, fontWeight: 500, textAlign: "right" }}>
+                <div className="cart-item-price" style={{ fontSize: 13, fontWeight: 500, textAlign: "right" }}>
                   {formatPrice(item.price * item.quantity)}
                 </div>
               </div>
@@ -204,8 +206,8 @@ export default function CartPage() {
                   width: "100%",
                   maxWidth: 400,
                   height: 48,
-                  background: "#111",
-                  color: "#fff",
+                  background: "var(--btn-bg)",
+                  color: "var(--btn-text)",
                   fontSize: 13,
                   fontWeight: 500,
                   letterSpacing: "0.08em",
@@ -219,8 +221,8 @@ export default function CartPage() {
                 style={{
                   fontSize: 12,
                   letterSpacing: "0.08em",
-                  color: "#6b6b6b",
-                  borderBottom: "1px solid #d6d3cc",
+                  color: "var(--text-muted)",
+                  borderBottom: "1px solid var(--border-light)",
                   paddingBottom: 2,
                 }}
               >

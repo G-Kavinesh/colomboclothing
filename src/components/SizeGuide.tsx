@@ -20,14 +20,14 @@ const cellStyle: React.CSSProperties = {
 const headerCellStyle: React.CSSProperties = {
   ...cellStyle,
   fontWeight: 600,
-  color: "#111",
-  borderBottom: "2px solid #111",
+  color: "var(--text)",
+  borderBottom: "2px solid var(--text)",
 };
 
 const bodyCellStyle: React.CSSProperties = {
   ...cellStyle,
-  color: "#6b6b6b",
-  borderBottom: "1px solid #ebe7de",
+  color: "var(--text-muted)",
+  borderBottom: "1px solid var(--border)",
 };
 
 export default function SizeGuide({
@@ -64,7 +64,7 @@ export default function SizeGuide({
         position: "fixed",
         inset: 0,
         zIndex: 1000,
-        background: "rgba(0, 0, 0, 0.4)",
+        background: "var(--overlay)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -72,14 +72,16 @@ export default function SizeGuide({
       }}
     >
       <div
+        className="size-guide-modal"
         style={{
-          background: "#f3f4f6",
+          background: "var(--modal-bg)",
           width: "100%",
           maxWidth: 520,
           maxHeight: "90vh",
           overflow: "auto",
           padding: "40px 32px",
           position: "relative",
+          border: "1px solid var(--border)",
         }}
       >
         {/* Close */}
@@ -105,7 +107,7 @@ export default function SizeGuide({
               position: "absolute",
               width: 18,
               height: 2,
-              background: "#111",
+              background: "var(--text)",
               transform: "rotate(45deg)",
             }}
           />
@@ -114,7 +116,7 @@ export default function SizeGuide({
               position: "absolute",
               width: 18,
               height: 2,
-              background: "#111",
+              background: "var(--text)",
               transform: "rotate(-45deg)",
             }}
           />
@@ -137,7 +139,7 @@ export default function SizeGuide({
             marginTop: 16,
             fontSize: 12,
             lineHeight: 1.6,
-            color: "#6b6b6b",
+            color: "var(--text-muted)",
             textAlign: "center",
             letterSpacing: "0.04em",
           }}
@@ -166,7 +168,7 @@ export default function SizeGuide({
           <tbody>
             {MEASUREMENTS.map((row) => (
               <tr key={row.size}>
-                <td style={{ ...bodyCellStyle, fontWeight: 500, color: "#111" }}>
+                <td style={{ ...bodyCellStyle, fontWeight: 500, color: "var(--text)" }}>
                   {row.size}
                 </td>
                 <td style={bodyCellStyle}>{row.chest}</td>
@@ -185,7 +187,7 @@ export default function SizeGuide({
               fontSize: 12,
               fontWeight: 600,
               letterSpacing: "0.08em",
-              color: "#111",
+              color: "var(--text)",
             }}
           >
             HOW TO MEASURE
@@ -197,21 +199,21 @@ export default function SizeGuide({
               gap: 8,
               fontSize: 12,
               lineHeight: 1.6,
-              color: "#6b6b6b",
+              color: "var(--text-muted)",
               letterSpacing: "0.04em",
             }}
           >
             <div>
-              <span style={{ fontWeight: 500, color: "#111" }}>CHEST</span> — Lay the garment
+              <span style={{ fontWeight: 500, color: "var(--text)" }}>CHEST</span> — Lay the garment
               flat. Measure across the chest, 2.5 cm below the armhole seam. Double for full
               circumference.
             </div>
             <div>
-              <span style={{ fontWeight: 500, color: "#111" }}>LENGTH</span> — From the
+              <span style={{ fontWeight: 500, color: "var(--text)" }}>LENGTH</span> — From the
               highest point of the shoulder seam straight down to the hem.
             </div>
             <div>
-              <span style={{ fontWeight: 500, color: "#111" }}>SHOULDER</span> — Seam to seam
+              <span style={{ fontWeight: 500, color: "var(--text)" }}>SHOULDER</span> — Seam to seam
               across the back, measured flat.
             </div>
           </div>

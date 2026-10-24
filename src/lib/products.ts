@@ -20,6 +20,7 @@ export const products: Product[] = [
     images: [
       { src: "/images/tee-front.webp", alt: "TS-01 Oversize Tee — front" },
       { src: "/images/tee-back.webp", alt: "TS-01 Oversize Tee — back" },
+      { src: "/images/tee-side.png", alt: "TS-01 Oversize Tee — side" },
     ],
   },
 ];
