@@ -153,6 +153,7 @@ export default function AdminDashboard() {
           {tab === "overview" && <OverviewTab />}
           {tab === "preorders" && <PreordersTab />}
           {tab === "products" && <ProductsTab />}
+          {tab === "subscribers" && <SubscribersTab />}
         </div>
       </main>
       <Footer />
@@ -645,6 +646,80 @@ function ProductEditor({ product, onSave, onCancel }: {
           CANCEL
         </button>
       </div>
+    </div>
+  );
+}
+
+/* ─── Subscribers Tab ─── */
+function SubscribersTab() {
+  const [subscribers, setSubscribers] = useState<string[]>([]);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("colombo-subscribers");
+      if (stored) setSubscribers(JSON.parse(stored));
+    } catch {}
+  }, []);
+
+  const copyAll = () => {
+    const text = subscribers.join("\n");
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const removeSubscriber = (email: string) => {
+    const updated = subscribers.filter((s) => s !== email);
+    setSubscribers(updated);
+    localStorage.setItem("colombo-subscribers", JSON.stringify(updated));
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
+        <div style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
+          {subscribers.length} SUBSCRIBER{subscribers.length !== 1 ? "S" : ""}
+        </div>
+        {subscribers.length > 0 && (
+          <button
+            onClick={copyAll}
+            style={{ padding: "8px 16px", border: "1px solid var(--border-light)", background: "transparent", color: "var(--text-muted)", font: "500 11px 'IBM Plex Mono', monospace", letterSpacing: "0.08em", cursor: "pointer" }}
+          >
+            {copied ? "COPIED" : "COPY ALL EMAILS"}
+          </button>
+        )}
+      </div>
+
+      {subscribers.length === 0 ? (
+        <div style={{ padding: "48px 0", textAlign: "center", fontSize: 13, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
+          NO SUBSCRIBERS YET
+        </div>
+      ) : (
+        subscribers.map((email) => (
+          <div
+            key={email}
+            style={{
+              padding: "12px 0",
+              borderBottom: "1px solid var(--border)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontSize: 13,
+              letterSpacing: "0.04em",
+            }}
+          >
+            <span>{email}</span>
+            <button
+              onClick={() => removeSubscriber(email)}
+              style={{ border: 0, background: "none", color: "var(--text-muted)", font: "400 11px 'IBM Plex Mono', monospace", cursor: "pointer", letterSpacing: "0.06em" }}
+            >
+              REMOVE
+            </button>
+          </div>
+        ))
+      )}
     </div>
   );
 }
