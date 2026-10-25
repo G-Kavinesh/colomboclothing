@@ -37,6 +37,8 @@ export const products: Product[] = [
     sizes: ["ONE SIZE"],
     images: [
       { src: "/images/cap-view01.webp", alt: "CMB-01 Cap — view 1" },
+      { src: "/images/cap-view02.webp", alt: "CMB-01 Cap — view 2" },
+      { src: "/images/cap-view03.webp", alt: "CMB-01 Cap — view 3" },
     ],
     preorder: true,
     preorderNote: "Expected dispatch: 2–3 weeks",
