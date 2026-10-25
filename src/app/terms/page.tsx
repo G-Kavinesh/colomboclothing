@@ -43,7 +43,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
           fontSize: 13,
           fontWeight: 600,
           letterSpacing: "0.06em",
-          color: "#111",
+          color: "var(--text)",
           margin: "0 0 8px",
         }}
       >

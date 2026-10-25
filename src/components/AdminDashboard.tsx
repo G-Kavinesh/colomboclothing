@@ -15,7 +15,7 @@ import {
   getRemainingAttempts,
 } from "@/lib/admin-auth";
 
-type Tab = "overview" | "preorders" | "products";
+type Tab = "overview" | "preorders" | "products" | "subscribers";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
 
         {/* Tabs */}
         <div style={{ width: "100%", maxWidth: 900, display: "flex", gap: 0, marginTop: 28, borderBottom: "1px solid var(--border)" }}>
-          {(["overview", "preorders", "products"] as Tab[]).map((t) => (
+          {(["overview", "preorders", "products", "subscribers"] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => { setTab(t); refreshSession(); }}

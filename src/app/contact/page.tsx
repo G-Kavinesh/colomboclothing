@@ -7,11 +7,11 @@ const inputStyle: React.CSSProperties = {
   width: "100%",
   height: 44,
   padding: "0 12px",
-  border: "1px solid #d6d3cc",
+  border: "1px solid var(--border-light)",
   background: "transparent",
   font: "400 13px 'IBM Plex Mono', monospace",
   letterSpacing: "0.04em",
-  color: "#111",
+  color: "var(--text)",
   boxSizing: "border-box",
 };
 
@@ -19,7 +19,7 @@ const labelStyle: React.CSSProperties = {
   fontSize: 11,
   fontWeight: 500,
   letterSpacing: "0.08em",
-  color: "#6b6b6b",
+  color: "var(--text-muted)",
   marginBottom: 6,
   display: "block",
 };
@@ -40,7 +40,7 @@ export default function ContactPage() {
       </p>
 
       <div style={{ marginTop: 8, marginBottom: 32 }}>
-        <span style={{ fontWeight: 500, color: "#111" }}>Email: </span>
+        <span style={{ fontWeight: 500, color: "var(--text)" }}>Email: </span>
         hello@colomboclothing.com
       </div>
 
@@ -51,7 +51,7 @@ export default function ContactPage() {
             textAlign: "center",
             fontSize: 13,
             letterSpacing: "0.08em",
-            color: "#111",
+            color: "var(--text)",
             fontWeight: 500,
           }}
         >
@@ -90,8 +90,8 @@ export default function ContactPage() {
               width: "100%",
               height: 48,
               border: 0,
-              background: "#111",
-              color: "#fff",
+              background: "var(--btn-bg)",
+              color: "var(--btn-text)",
               font: "500 13px 'IBM Plex Mono', monospace",
               letterSpacing: "0.08em",
               cursor: "pointer",

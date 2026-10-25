@@ -4,6 +4,7 @@ import { CartProvider } from "@/lib/cart-context";
 import { ThemeProvider } from "@/lib/theme-context";
 import { PreorderProvider } from "@/lib/preorder-context";
 import { ProductProvider } from "@/lib/product-context";
+import EmailPopup from "@/components/EmailPopup";
 import "./globals.css";
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -24,7 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <ProductProvider>
             <PreorderProvider>
-              <CartProvider>{children}</CartProvider>
+              <CartProvider>
+                {children}
+                <EmailPopup />
+              </CartProvider>
             </PreorderProvider>
           </ProductProvider>
         </ThemeProvider>

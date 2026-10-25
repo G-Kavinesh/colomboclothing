@@ -45,6 +45,18 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
+input,
+textarea,
+select {
+  color: var(--text);
+  background: transparent;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
 a {
   color: var(--link);
   text-decoration: none;
