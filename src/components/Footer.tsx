@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -31,23 +30,6 @@ export default function Footer() {
         <Link href="/cookies">COOKIES</Link>
         <Link href="/order-status">ORDER STATUS</Link>
       </nav>
-      <Link href="/" style={{ display: "block" }}>
-        <Image
-          src="/images/colombo-logo.png"
-          alt="Colombo"
-          width={120}
-          height={44}
-          className="footer-logo"
-          style={{
-            width: 120,
-            height: "auto",
-            display: "block",
-          }}
-        />
-      </Link>
-      <div className="footer-copy" style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
-        © colomboclothing.com · made in Sri Lanka 🇱🇰
-      </div>
     </footer>
   );
 }
