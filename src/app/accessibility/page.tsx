@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "@/components/InfoPage";
 
-export const metadata = { title: "Accessibility — Colombo Clothing" };
+export const metadata: Metadata = {
+  title: "Accessibility",
+  description: "Our commitment to making colomboclothing.com accessible to everyone, following WCAG 2.1 AA.",
+  alternates: { canonical: "/accessibility" },
+};
 
 export default function AccessibilityPage() {
   return (

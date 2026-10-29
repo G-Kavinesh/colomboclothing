@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import ComingSoon from "@/components/ComingSoon";
 import Shop from "./shop/page";
+import { COMING_SOON } from "@/lib/site";
 
-// Set to false on launch to bring back the original product grid home page
-const COMING_SOON = true;
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function Home() {
   return COMING_SOON ? <ComingSoon /> : <Shop />;

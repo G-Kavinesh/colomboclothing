@@ -6,6 +6,8 @@ export type Product = {
   description: string;
   sizes: string[];
   images: { src: string; alt: string }[];
+  // Image used for link previews when it differs from images[0]
+  shareImage?: string;
   preorder?: boolean;
   preorderNote?: string;
 };
@@ -24,6 +26,7 @@ export const products: Product[] = [
       { src: "/images/tee-back.webp", alt: "CMB-01 Oversize Tee — back" },
       { src: "/images/tee-side.png", alt: "CMB-01 Oversize Tee — side" },
     ],
+    shareImage: "/images/tee-back.webp",
     preorder: true,
     preorderNote: "Expected dispatch: 2–3 weeks",
   },

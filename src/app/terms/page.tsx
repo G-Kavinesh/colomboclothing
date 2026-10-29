@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "@/components/InfoPage";
 
-export const metadata = { title: "Terms — Colombo Clothing" };
+export const metadata: Metadata = {
+  title: "Terms & Conditions",
+  description: "The terms that apply to orders, pricing, shipping and returns at Colombo Clothing.",
+  alternates: { canonical: "/terms" },
+};
 
 export default function TermsPage() {
   return (

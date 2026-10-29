@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "@/components/InfoPage";
 
-export const metadata = { title: "Cookies — Colombo Clothing" };
+export const metadata: Metadata = {
+  title: "Cookies",
+  description: "How Colombo Clothing uses cookies and local storage to keep your bag and preferences between visits.",
+  alternates: { canonical: "/cookies" },
+};
 
 export default function CookiesPage() {
   return (

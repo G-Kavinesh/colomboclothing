@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "@/components/InfoPage";
 
-export const metadata = { title: "Privacy — Colombo Clothing" };
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "How Colombo Clothing collects, uses and protects your personal data when you shop with us.",
+  alternates: { canonical: "/privacy" },
+};
 
 export default function PrivacyPage() {
   return (
