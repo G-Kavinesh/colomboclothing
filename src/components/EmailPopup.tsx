@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { addSubscriber } from "@/lib/subscribers";
 
 const STORAGE_KEY = "colombo-email-popup";
-const SUBSCRIBERS_KEY = "colombo-subscribers";
 const DELAY_MS = 4000; // show after 4 seconds
 
 export default function EmailPopup() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -37,21 +39,14 @@ export default function EmailPopup() {
     e.preventDefault();
     if (!email.trim()) return;
 
-    // Store subscriber
-    try {
-      const stored = localStorage.getItem(SUBSCRIBERS_KEY);
-      const subscribers: string[] = stored ? JSON.parse(stored) : [];
-      if (!subscribers.includes(email.toLowerCase())) {
-        subscribers.push(email.toLowerCase());
-        localStorage.setItem(SUBSCRIBERS_KEY, JSON.stringify(subscribers));
-      }
-    } catch {}
+    addSubscriber(email);
 
     setSubmitted(true);
     setTimeout(close, 2000);
   };
 
-  if (!visible) return null;
+  // The coming soon page has its own signup form
+  if (!visible || pathname === "/") return null;
 
   return (
     <div
