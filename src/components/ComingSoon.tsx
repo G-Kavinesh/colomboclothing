@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useTheme } from "@/lib/theme-context";
-import { addSubscriber } from "@/lib/subscribers";
+import { addSubscriber, type SignupResult } from "@/lib/subscribers";
+import { BotTrap, SignupError } from "@/components/SignupFields";
 
 const HEADLINE = "COMING SOON";
 const TICKER = "100% COTTON · ESSENTIALS · MADE IN COLOMBO · HEAVYWEIGHT · GARMENT-DYED · CLOTHING MADE SIMPLE · ";
@@ -11,19 +12,29 @@ const TICKER = "100% COTTON · ESSENTIALS · MADE IN COLOMBO · HEAVYWEIGHT · G
 export default function ComingSoon() {
   const { theme, toggleTheme } = useTheme();
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<"new" | "already" | null>(null);
   const [sending, setSending] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failure, setFailure] = useState<Extract<SignupResult, { ok: false }> | null>(null);
+  const [trap, setTrap] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim() || sending) return;
+  const submit = async (value: string) => {
+    if (!value.trim() || sending) return;
     setSending(true);
-    setFailed(false);
-    const saved = await addSubscriber(email);
+    setFailure(null);
+    const result = await addSubscriber(value, trap);
     setSending(false);
-    if (saved) setSubmitted(true);
-    else setFailed(true);
+    if (result.ok) setSubmitted(result.already ? "already" : "new");
+    else setFailure(result);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submit(email);
+  };
+
+  const applySuggestion = (fixed: string) => {
+    setEmail(fixed);
+    submit(fixed);
   };
 
   return (
@@ -154,7 +165,7 @@ export default function ComingSoon() {
           {submitted ? (
             <div style={{ padding: "14px 0" }}>
               <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.08em", color: "var(--text)" }}>
-                YOU&apos;RE ON THE LIST
+                {submitted === "already" ? <>YOU&apos;RE ALREADY ON THE LIST</> : <>YOU&apos;RE ON THE LIST</>}
               </div>
               <div style={{ marginTop: 10, fontSize: 12, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
                 We&apos;ll email you the moment Drop 01 goes live.
@@ -166,6 +177,7 @@ export default function ComingSoon() {
                 BE FIRST IN LINE
               </div>
               <form className="cs-form" onSubmit={handleSubmit} style={{ display: "flex", width: "100%" }}>
+                <BotTrap value={trap} onChange={setTrap} />
                 <input
                   type="email"
                   value={email}
@@ -204,10 +216,13 @@ export default function ComingSoon() {
                   {sending ? "SENDING…" : "NOTIFY ME"}
                 </button>
               </form>
-              {failed && (
-                <div role="alert" style={{ marginTop: 12, fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
-                  Couldn&apos;t sign you up just now. Please try again.
-                </div>
+              {failure && (
+                <SignupError
+                  error={failure.error}
+                  suggestion={failure.suggestion}
+                  onUseSuggestion={applySuggestion}
+                  style={{ marginTop: 12 }}
+                />
               )}
             </>
           )}

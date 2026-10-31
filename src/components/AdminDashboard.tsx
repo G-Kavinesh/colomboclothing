@@ -656,10 +656,11 @@ function ProductEditor({ product, onSave, onCancel }: {
 // kept for this browser tab only, so you enter it once per visit.
 const SERVER_KEY = "colombo-admin-server-key";
 
-async function fetchSubscribers(key: string): Promise<Subscriber[] | "unauthorized" | "error"> {
+async function fetchSubscribers(key: string): Promise<Subscriber[] | "unauthorized" | "locked" | "error"> {
   try {
     const res = await fetch("/api/subscribers", { headers: { "x-admin-password": key } });
     if (res.status === 401) return "unauthorized";
+    if (res.status === 429) return "locked";
     if (!res.ok) return "error";
     return (await res.json()).subscribers;
   } catch {
@@ -685,10 +686,10 @@ function SubscribersTab() {
     let cancelled = false;
     fetchSubscribers(password).then((result) => {
       if (cancelled) return;
-      if (result === "unauthorized") {
+      if (result === "unauthorized" || result === "locked") {
         try { sessionStorage.removeItem(SERVER_KEY); } catch {}
         setPassword("");
-        setError("WRONG PASSWORD");
+        setError(result === "locked" ? "TOO MANY WRONG PASSWORDS. TRY AGAIN IN 15 MIN" : "WRONG PASSWORD");
       } else if (result === "error") {
         setError("COULDN'T LOAD SUBSCRIBERS. TRY AGAIN");
       } else {

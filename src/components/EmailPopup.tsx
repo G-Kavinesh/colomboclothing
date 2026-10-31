@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { addSubscriber } from "@/lib/subscribers";
+import { addSubscriber, type SignupResult } from "@/lib/subscribers";
+import { BotTrap, SignupError } from "@/components/SignupFields";
 
 const STORAGE_KEY = "colombo-email-popup";
 const DELAY_MS = 4000; // show after 4 seconds
@@ -11,10 +12,11 @@ export default function EmailPopup() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<"new" | "already" | null>(null);
   const [closing, setClosing] = useState(false);
   const [sending, setSending] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failure, setFailure] = useState<Extract<SignupResult, { ok: false }> | null>(null);
+  const [trap, setTrap] = useState("");
 
   useEffect(() => {
     try {
@@ -37,21 +39,30 @@ export default function EmailPopup() {
     }, 300);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim() || sending) return;
+  const submit = async (value: string) => {
+    if (!value.trim() || sending) return;
 
     setSending(true);
-    setFailed(false);
-    const saved = await addSubscriber(email);
+    setFailure(null);
+    const result = await addSubscriber(value, trap);
     setSending(false);
-    if (!saved) {
-      setFailed(true);
+    if (!result.ok) {
+      setFailure(result);
       return;
     }
 
-    setSubmitted(true);
+    setSubmitted(result.already ? "already" : "new");
     setTimeout(close, 2000);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submit(email);
+  };
+
+  const applySuggestion = (fixed: string) => {
+    setEmail(fixed);
+    submit(fixed);
   };
 
   // The coming soon page has its own signup form
@@ -126,7 +137,7 @@ export default function EmailPopup() {
                 color: "var(--text)",
               }}
             >
-              YOU&apos;RE IN
+              {submitted === "already" ? <>YOU&apos;RE ALREADY IN</> : <>YOU&apos;RE IN</>}
             </div>
             <div
               style={{
@@ -186,6 +197,7 @@ export default function EmailPopup() {
                 gap: 12,
               }}
             >
+              <BotTrap value={trap} onChange={setTrap} />
               <input
                 type="email"
                 value={email}
@@ -222,10 +234,8 @@ export default function EmailPopup() {
               >
                 {sending ? "SENDING…" : "JOIN THE LIST"}
               </button>
-              {failed && (
-                <div role="alert" style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
-                  Couldn&apos;t sign you up just now. Please try again.
-                </div>
+              {failure && (
+                <SignupError error={failure.error} suggestion={failure.suggestion} onUseSuggestion={applySuggestion} />
               )}
             </form>
 

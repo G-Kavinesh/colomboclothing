@@ -1,16 +1,24 @@
 export type Subscriber = { email: string; joinedAt: number };
 
-// Sends a signup to the server (see app/api/subscribers). Resolves false if it
-// wasn't saved, so the form can ask the visitor to try again.
-export async function addSubscriber(email: string): Promise<boolean> {
+export type SignupResult =
+  | { ok: true; already: boolean }
+  | { ok: false; error: string; suggestion?: string };
+
+const FALLBACK_ERROR = "Couldn't sign you up just now. Please try again.";
+
+// Sends a signup to the server (see app/api/subscribers), which checks the address
+// and says whether it was already on the list. `trap` is the hidden bot field.
+export async function addSubscriber(email: string, trap = ""): Promise<SignupResult> {
   try {
     const res = await fetch("/api/subscribers", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, website: trap }),
     });
-    return res.ok;
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { ok: true, already: Boolean(data.already) };
+    return { ok: false, error: data.error ?? FALLBACK_ERROR, suggestion: data.suggestion };
   } catch {
-    return false;
+    return { ok: false, error: FALLBACK_ERROR };
   }
 }
