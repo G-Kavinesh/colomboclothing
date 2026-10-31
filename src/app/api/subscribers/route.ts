@@ -1,6 +1,6 @@
 import { Resolver } from "node:dns/promises";
 import { hasSession } from "@/lib/admin-session";
-import { isDisposable, isValidEmail, KNOWN_PROVIDERS, normalizeEmail, suggestCorrection } from "@/lib/email-rules";
+import { isDisposable, isValidEmail, KNOWN_PROVIDERS, normalizeEmail, suggestCorrection, suggestProvider } from "@/lib/email-rules";
 import { clientIp, hit, redis } from "@/lib/redis";
 
 // Signups live in a Redis sorted set scored by signup time, so the admin list reads
@@ -12,8 +12,10 @@ const SIGNUP_LIMIT = { max: 10, windowSeconds: 10 * 60 };
 
 const mailResolver = new Resolver({ timeout: 3000, tries: 1 });
 
-// Whether the domain has somewhere to deliver mail. Only a definite "no such domain"
-// or "no mail server" answer turns a signup away, never a slow or failed lookup.
+// Whether the domain has a mail server. Only a definite "no such domain" or "no mail
+// server" answer turns a signup away, never a slow or failed lookup. Domains with a
+// website but no MX record (common for typo domains like gmali.com) are refused:
+// mail could in theory fall back to the website's address, but real inboxes don't.
 async function domainAcceptsMail(domain: string) {
   if (KNOWN_PROVIDERS.has(domain)) return true;
   try {
@@ -22,12 +24,7 @@ async function domainAcceptsMail(domain: string) {
     return records.some((r) => r.exchange && r.exchange !== ".");
   } catch (err) {
     const code = (err as NodeJS.ErrnoException).code;
-    if (code === "ENOTFOUND") return false;
-    if (code === "ENODATA") {
-      // No MX record: mail falls back to the domain's own address
-      return mailResolver.resolve4(domain).then((ips) => ips.length > 0, () => false);
-    }
-    return true;
+    return code !== "ENOTFOUND" && code !== "ENODATA";
   }
 }
 
@@ -54,13 +51,16 @@ export async function POST(request: Request) {
   const typed = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
   if (!isValidEmail(typed)) return reject("That doesn't look like a valid email address.");
 
-  const suggestion = suggestCorrection(typed);
+  // `keep` is sent when the visitor chose "keep mine" over the suggested spelling
+  const suggestion = body?.keep ? undefined : suggestCorrection(typed);
   if (suggestion) return reject(`Did you mean ${suggestion}?`, 400, { suggestion });
 
   if (isDisposable(typed)) return reject("Please use a permanent email address, not a temporary one.");
 
   const email = normalizeEmail(typed);
   if (!(await domainAcceptsMail(email.slice(email.lastIndexOf("@") + 1)))) {
+    const provider = body?.keep ? undefined : suggestProvider(typed);
+    if (provider) return reject(`Did you mean ${provider}?`, 400, { suggestion: provider });
     return reject("That email domain can't receive mail. Please check the spelling.");
   }
 

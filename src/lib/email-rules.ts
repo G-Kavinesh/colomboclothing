@@ -38,26 +38,49 @@ export const KNOWN_PROVIDERS = new Set([
   ...PLUS_ALIASES, "yahoo.com", "ymail.com", "aol.com", "msn.com", "zoho.com", "gmx.com",
 ]);
 
-// Misspellings people often type, mapped to what they meant
-const TYPOS: Record<string, string> = {
-  "gmial.com": "gmail.com", "gmai.com": "gmail.com", "gamil.com": "gmail.com",
-  "gnail.com": "gmail.com", "gmaill.com": "gmail.com", "gmail.co": "gmail.com",
-  "gmail.con": "gmail.com", "gmail.cm": "gmail.com", "gmail.om": "gmail.com",
-  "gmail.comm": "gmail.com", "gmal.com": "gmail.com", "gmil.com": "gmail.com",
-  "yaho.com": "yahoo.com", "yahooo.com": "yahoo.com", "yahoo.co": "yahoo.com",
-  "yahoo.con": "yahoo.com", "yhoo.com": "yahoo.com",
-  "hotmial.com": "hotmail.com", "hotmal.com": "hotmail.com", "hotmail.co": "hotmail.com",
-  "hotmail.con": "hotmail.com", "hotmil.com": "hotmail.com",
-  "outlok.com": "outlook.com", "outllook.com": "outlook.com", "outlook.co": "outlook.com",
-  "outlook.con": "outlook.com",
-  "iclod.com": "icloud.com", "icoud.com": "icloud.com", "icloud.co": "icloud.com",
-  "icloud.con": "icloud.com",
-};
+// Big providers people often mistype. A domain one or two keystrokes away from one
+// of these (gmali.com, gmial.com, gmail.co, hotmial.com) gets a "did you mean".
+const TYPO_TARGETS = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "icloud.com"];
+
+// Real providers that happen to sit close to those, so they're never "corrected"
+const NOT_TYPOS = new Set([...KNOWN_PROVIDERS, "mail.com", "email.com", "gmx.net", "yahoo.co.uk", "yahoo.co.in", "hotmail.co.uk"]);
+
+// Edit distance where swapping two neighbouring letters counts as one mistake
+function typoDistance(a: string, b: string) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+      }
+    }
+  }
+  return d[a.length][b.length];
+}
 
 export function suggestCorrection(email: string): string | undefined {
   const at = email.lastIndexOf("@");
-  const fix = TYPOS[email.slice(at + 1)];
-  return fix ? `${email.slice(0, at)}@${fix}` : undefined;
+  const domain = email.slice(at + 1);
+  if (NOT_TYPOS.has(domain)) return undefined;
+  let best: { target: string; distance: number } | undefined;
+  for (const target of TYPO_TARGETS) {
+    const distance = typoDistance(domain, target);
+    if (distance <= 2 && (!best || distance < best.distance)) best = { target, distance };
+  }
+  return best && `${email.slice(0, at)}@${best.target}`;
+}
+
+// For a domain that turned out to take no mail: the provider it starts with, if any
+// (gmail.lk, hotmail.co.lk). Regional domains that do take mail, like yahoo.co.uk,
+// never get this far.
+export function suggestProvider(email: string): string | undefined {
+  const at = email.lastIndexOf("@");
+  const name = email.slice(at + 1).split(".")[0];
+  const target = TYPO_TARGETS.find((t) => t.split(".")[0] === name);
+  return target && `${email.slice(0, at)}@${target}`;
 }
 
 // Throwaway inboxes that expire within minutes, so nobody would ever read a drop email

@@ -17,11 +17,11 @@ export default function ComingSoon() {
   const [failure, setFailure] = useState<Extract<SignupResult, { ok: false }> | null>(null);
   const [trap, setTrap] = useState("");
 
-  const submit = async (value: string) => {
+  const submit = async (value: string, keep = false) => {
     if (!value.trim() || sending) return;
     setSending(true);
     setFailure(null);
-    const result = await addSubscriber(value, trap);
+    const result = await addSubscriber(value, trap, keep);
     setSending(false);
     if (result.ok) setSubmitted(result.already ? "already" : "new");
     else setFailure(result);
@@ -221,6 +221,7 @@ export default function ComingSoon() {
                   error={failure.error}
                   suggestion={failure.suggestion}
                   onUseSuggestion={applySuggestion}
+                  onKeep={() => submit(email, true)}
                   style={{ marginTop: 12 }}
                 />
               )}

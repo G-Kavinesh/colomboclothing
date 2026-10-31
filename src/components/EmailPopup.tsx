@@ -39,12 +39,12 @@ export default function EmailPopup() {
     }, 300);
   };
 
-  const submit = async (value: string) => {
+  const submit = async (value: string, keep = false) => {
     if (!value.trim() || sending) return;
 
     setSending(true);
     setFailure(null);
-    const result = await addSubscriber(value, trap);
+    const result = await addSubscriber(value, trap, keep);
     setSending(false);
     if (!result.ok) {
       setFailure(result);
@@ -235,7 +235,7 @@ export default function EmailPopup() {
                 {sending ? "SENDING…" : "JOIN THE LIST"}
               </button>
               {failure && (
-                <SignupError error={failure.error} suggestion={failure.suggestion} onUseSuggestion={applySuggestion} />
+                <SignupError error={failure.error} suggestion={failure.suggestion} onUseSuggestion={applySuggestion} onKeep={() => submit(email, true)} />
               )}
             </form>
 
