@@ -7,14 +7,6 @@ import { usePreorder, PreorderStatus } from "@/lib/preorder-context";
 import { useProducts } from "@/lib/product-context";
 import { Product, formatPrice } from "@/lib/products";
 import type { Subscriber } from "@/lib/subscribers";
-import {
-  verifyPassword,
-  isSessionValid,
-  refreshSession,
-  logout,
-  isLockedOut,
-  getRemainingAttempts,
-} from "@/lib/admin-auth";
 
 type Tab = "overview" | "preorders" | "products" | "subscribers";
 
@@ -45,50 +37,73 @@ const statusColors: Record<PreorderStatus, string> = {
   cancelled: "#ea4335",
 };
 
+// Sign-in lives on the server (app/api/admin/session) behind ADMIN_PASSWORD
+async function sessionStatus(renew = false) {
+  try {
+    const res = await fetch(`/api/admin/session${renew ? "?renew" : ""}`, { cache: "no-store" });
+    return Boolean((await res.json()).authenticated);
+  } catch {
+    return false;
+  }
+}
+
 export default function AdminDashboard() {
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [lockedUntil, setLockedUntil] = useState(0);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>("overview");
 
   // Check existing session on mount
   useEffect(() => {
-    if (isSessionValid()) {
-      setAuthenticated(true);
-      refreshSession();
-    }
-    setLoading(false);
+    sessionStatus(true).then((ok) => {
+      setAuthenticated(ok);
+      setLoading(false);
+    });
   }, []);
 
-  // Session refresh on activity
+  const expireSession = useCallback(() => {
+    setAuthenticated(false);
+    setError("SESSION EXPIRED");
+  }, []);
+
+  // Sign out here too once the server session runs out
   useEffect(() => {
     if (!authenticated) return;
     const interval = setInterval(() => {
-      if (!isSessionValid()) {
-        setAuthenticated(false);
-        setError("SESSION EXPIRED");
-      }
+      sessionStatus().then((ok) => {
+        if (!ok) expireSession();
+      });
     }, 60000);
     return () => clearInterval(interval);
-  }, [authenticated]);
+  }, [authenticated, expireSession]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    const result = await verifyPassword(password);
-    if (result.success) {
-      setAuthenticated(true);
+    try {
+      const res = await fetch("/api/admin/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json().catch(() => ({}));
       setPassword("");
-    } else {
-      setError(result.error || "INCORRECT PASSWORD");
-      setPassword("");
+      if (res.ok) {
+        setAuthenticated(true);
+        return;
+      }
+      if (data.retryAfter) setLockedUntil(Date.now() + data.retryAfter * 1000);
+      setError(data.error || "INCORRECT PASSWORD");
+    } catch {
+      setError("COULDN'T SIGN IN. TRY AGAIN");
     }
   };
 
   const handleLogout = () => {
-    logout();
+    fetch("/api/admin/session", { method: "DELETE" }).catch(() => {});
     setAuthenticated(false);
     setPassword("");
     setError("");
@@ -109,7 +124,16 @@ export default function AdminDashboard() {
   }
 
   if (!authenticated) {
-    return <LoginScreen password={password} setPassword={setPassword} error={error} onSubmit={handleLogin} />;
+    return (
+      <LoginScreen
+        password={password}
+        setPassword={setPassword}
+        error={error}
+        lockedUntil={lockedUntil}
+        onUnlock={() => setError("")}
+        onSubmit={handleLogin}
+      />
+    );
   }
 
   return (
@@ -131,7 +155,7 @@ export default function AdminDashboard() {
           {(["overview", "preorders", "products", "subscribers"] as Tab[]).map((t) => (
             <button
               key={t}
-              onClick={() => { setTab(t); refreshSession(); }}
+              onClick={() => { setTab(t); sessionStatus(true); }}
               style={{
                 padding: "12px 24px",
                 border: 0,
@@ -154,7 +178,7 @@ export default function AdminDashboard() {
           {tab === "overview" && <OverviewTab />}
           {tab === "preorders" && <PreordersTab />}
           {tab === "products" && <ProductsTab />}
-          {tab === "subscribers" && <SubscribersTab />}
+          {tab === "subscribers" && <SubscribersTab onSessionExpired={expireSession} />}
         </div>
       </main>
       <Footer />
@@ -163,29 +187,31 @@ export default function AdminDashboard() {
 }
 
 /* ─── Login Screen ─── */
-function LoginScreen({ password, setPassword, error, onSubmit }: {
+function LoginScreen({ password, setPassword, error, lockedUntil, onUnlock, onSubmit }: {
   password: string;
   setPassword: (v: string) => void;
   error: string;
+  lockedUntil: number;
+  onUnlock: () => void;
   onSubmit: (e: React.FormEvent) => void;
 }) {
-  const lockout = isLockedOut();
-  const [countdown, setCountdown] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
+  const countdown = Math.max(0, Math.ceil((lockedUntil - now) / 1000));
+  const locked = countdown > 0;
 
+  // Ticks the lockout countdown the server asked for, then clears the message
   useEffect(() => {
-    if (!lockout.locked) return;
-    setCountdown(Math.ceil(lockout.remainingMs / 1000));
+    if (lockedUntil <= Date.now()) return;
     const interval = setInterval(() => {
-      const check = isLockedOut();
-      if (!check.locked) {
-        setCountdown(0);
+      const t = Date.now();
+      setNow(t);
+      if (t >= lockedUntil) {
         clearInterval(interval);
-      } else {
-        setCountdown(Math.ceil(check.remainingMs / 1000));
+        onUnlock();
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [lockout.locked, lockout.remainingMs]);
+  }, [lockedUntil, onUnlock]);
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -203,33 +229,28 @@ function LoginScreen({ password, setPassword, error, onSubmit }: {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter password"
-            disabled={lockout.locked}
-            style={{ ...inputStyle, opacity: lockout.locked ? 0.5 : 1 }}
+            disabled={locked}
+            style={{ ...inputStyle, opacity: locked ? 0.5 : 1 }}
           />
           <button
             type="submit"
-            disabled={lockout.locked}
+            disabled={locked}
             style={{
               width: "100%",
               height: 44,
               border: 0,
-              background: lockout.locked ? "var(--text-muted)" : "var(--btn-bg)",
+              background: locked ? "var(--text-muted)" : "var(--btn-bg)",
               color: "var(--btn-text)",
               font: "500 13px 'IBM Plex Mono', monospace",
               letterSpacing: "0.08em",
-              cursor: lockout.locked ? "default" : "pointer",
+              cursor: locked ? "default" : "pointer",
             }}
           >
-            {lockout.locked ? `LOCKED (${countdown}s)` : "ENTER"}
+            {locked ? `LOCKED (${countdown}s)` : "ENTER"}
           </button>
           {error && (
             <div style={{ fontSize: 11, letterSpacing: "0.08em", color: "#ea4335", textAlign: "center" }}>
               {error}
-            </div>
-          )}
-          {!lockout.locked && getRemainingAttempts() < MAX_DISPLAY_ATTEMPTS && (
-            <div style={{ fontSize: 10, letterSpacing: "0.06em", color: "var(--text-muted)", textAlign: "center" }}>
-              {getRemainingAttempts()} ATTEMPTS REMAINING
             </div>
           )}
         </form>
@@ -238,8 +259,6 @@ function LoginScreen({ password, setPassword, error, onSubmit }: {
     </div>
   );
 }
-
-const MAX_DISPLAY_ATTEMPTS = 5;
 
 /* ─── Overview Tab ─── */
 function OverviewTab() {
@@ -652,15 +671,11 @@ function ProductEditor({ product, onSave, onCancel }: {
 }
 
 /* ─── Subscribers Tab ─── */
-// The list lives on the server, so it needs the ADMIN_PASSWORD set in Vercel. It's
-// kept for this browser tab only, so you enter it once per visit.
-const SERVER_KEY = "colombo-admin-server-key";
-
-async function fetchSubscribers(key: string): Promise<Subscriber[] | "unauthorized" | "locked" | "error"> {
+// The list lives on the server and loads with the dashboard's sign-in session
+async function fetchSubscribers(): Promise<Subscriber[] | "unauthorized" | "error"> {
   try {
-    const res = await fetch("/api/subscribers", { headers: { "x-admin-password": key } });
+    const res = await fetch("/api/subscribers", { cache: "no-store" });
     if (res.status === 401) return "unauthorized";
-    if (res.status === 429) return "locked";
     if (!res.ok) return "error";
     return (await res.json()).subscribers;
   } catch {
@@ -668,40 +683,23 @@ async function fetchSubscribers(key: string): Promise<Subscriber[] | "unauthoriz
   }
 }
 
-function SubscribersTab() {
-  const [password, setPassword] = useState(() => {
-    try {
-      return sessionStorage.getItem(SERVER_KEY) ?? "";
-    } catch {
-      return "";
-    }
-  });
-  const [input, setInput] = useState("");
+function SubscribersTab({ onSessionExpired }: { onSessionExpired: () => void }) {
   const [subscribers, setSubscribers] = useState<Subscriber[] | null>(null);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!password) return;
     let cancelled = false;
-    fetchSubscribers(password).then((result) => {
+    fetchSubscribers().then((result) => {
       if (cancelled) return;
-      if (result === "unauthorized" || result === "locked") {
-        try { sessionStorage.removeItem(SERVER_KEY); } catch {}
-        setPassword("");
-        setError(result === "locked" ? "TOO MANY WRONG PASSWORDS. TRY AGAIN IN 15 MIN" : "WRONG PASSWORD");
-      } else if (result === "error") {
-        setError("COULDN'T LOAD SUBSCRIBERS. TRY AGAIN");
-      } else {
-        try { sessionStorage.setItem(SERVER_KEY, password); } catch {}
-        setError("");
-        setSubscribers(result);
-      }
+      if (result === "unauthorized") onSessionExpired();
+      else if (result === "error") setError("COULDN'T LOAD SUBSCRIBERS. TRY AGAIN");
+      else setSubscribers(result);
     });
     return () => {
       cancelled = true;
     };
-  }, [password]);
+  }, [onSessionExpired]);
 
   const copyAll = () => {
     if (!subscribers) return;
@@ -713,44 +711,17 @@ function SubscribersTab() {
   };
 
   const removeSubscriber = async (email: string) => {
-    const res = await fetch(`/api/subscribers?email=${encodeURIComponent(email)}`, {
-      method: "DELETE",
-      headers: { "x-admin-password": password },
-    }).catch(() => null);
+    const res = await fetch(`/api/subscribers?email=${encodeURIComponent(email)}`, { method: "DELETE" }).catch(() => null);
+    if (res?.status === 401) {
+      onSessionExpired();
+      return;
+    }
     if (!res?.ok) {
       setError("COULDN'T REMOVE. TRY AGAIN");
       return;
     }
     setSubscribers((prev) => prev && prev.filter((s) => s.email !== email));
   };
-
-  if (!password) {
-    return (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (input) setPassword(input);
-        }}
-        style={{ maxWidth: 360, display: "flex", flexDirection: "column", gap: 12 }}
-      >
-        <div style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
-          ENTER THE SERVER ADMIN PASSWORD TO VIEW SUBSCRIBERS
-        </div>
-        <input
-          type="password"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Password"
-          aria-label="Server admin password"
-          style={inputStyle}
-        />
-        <button type="submit" style={{ height: 44, border: 0, background: "var(--btn-bg)", color: "var(--btn-text)", font: "500 12px 'IBM Plex Mono', monospace", letterSpacing: "0.1em", cursor: "pointer" }}>
-          UNLOCK
-        </button>
-        {error && <div style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>{error}</div>}
-      </form>
-    );
-  }
 
   return (
     <div>
