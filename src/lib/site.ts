@@ -13,8 +13,11 @@ export const SITE_URL = "https://colomboclothing.com";
 // and preview builds never end up in search results.
 export const IS_PRODUCTION = process.env.VERCEL_ENV === "production";
 
+// WhatsApp, iMessage, Slack, Discord and Telegram cache share images by URL, so the
+// version changes with the launch flag — otherwise the old "coming soon" card
+// would keep showing after launch.
 export const SITE_OG_IMAGE = {
-  url: "/og.jpg",
+  url: `/og.jpg?v=${COMING_SOON ? "soon" : "live"}`,
   width: 1200,
   height: 630,
   type: "image/jpeg",

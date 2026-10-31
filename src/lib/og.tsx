@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
-import { formatPrice, type Product } from "@/lib/products";
+import { formatPrice, products, type Product } from "@/lib/products";
 import { COMING_SOON } from "@/lib/site";
 
 // Share images for link previews (WhatsApp, iMessage, Instagram, Facebook, X, LinkedIn,
@@ -51,6 +51,10 @@ async function toJpeg(image: ImageResponse) {
 }
 
 export async function siteOgImage() {
+  return COMING_SOON ? comingSoonOgImage() : collectionOgImage();
+}
+
+async function comingSoonOgImage() {
   const logo = await publicImage("/images/colombo-logo.png", 1280);
 
   return toJpeg(
@@ -77,7 +81,7 @@ export async function siteOgImage() {
             {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
             <img src={logo} width={640} height={238} />
             <div style={{ marginTop: 36, fontSize: 34, fontWeight: 600, letterSpacing: "0.32em", marginRight: "-0.32em" }}>
-              {COMING_SOON ? "COMING SOON" : "SHOP NOW"}
+              COMING SOON
             </div>
           </div>
 
@@ -87,6 +91,85 @@ export async function siteOgImage() {
               justifyContent: "center",
               borderTop: `1px solid ${BORDER}`,
               paddingTop: 24,
+              fontSize: 18,
+              fontWeight: 500,
+              letterSpacing: "0.08em",
+              color: MUTED,
+            }}
+          >
+            100% COTTON · HEAVYWEIGHT · GARMENT-DYED · MADE IN COLOMBO
+          </div>
+        </div>
+      ),
+      { ...OG_SIZE, fonts: await fonts() }
+    )
+  );
+}
+
+// Launch card: logo above the product line-up
+async function collectionOgImage() {
+  const lineup = products.slice(0, 4);
+  const [logo, ...photos] = await Promise.all([
+    publicImage("/images/colombo-logo.png", 820),
+    ...lineup.map((p) => publicImage(p.shareImage ?? p.images[0].src, 480)),
+  ]);
+  const tileWidth = Math.floor((1200 - 128 - 24 * (lineup.length - 1)) / lineup.length);
+
+  return toJpeg(
+    new ImageResponse(
+      (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            background: BG,
+            color: TEXT,
+            fontFamily: "IBM Plex Mono",
+            padding: "40px 64px",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, fontWeight: 600, letterSpacing: "0.08em" }}>
+            <span>{DOMAIN}</span>
+            <span style={{ letterSpacing: "0.16em" }}>SHOP NOW</span>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+            <img src={logo} width={410} height={153} />
+          </div>
+
+          <div style={{ flex: 1, display: "flex", gap: 24, marginTop: 20, marginBottom: 22 }}>
+            {lineup.map((p, i) => (
+              <div
+                key={p.slug}
+                style={{
+                  width: tileWidth,
+                  display: "flex",
+                  flexDirection: "column",
+                  background: "#fff",
+                  padding: "16px 16px 12px",
+                }}
+              >
+                <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+                  <img src={photos[i]} style={{ maxWidth: "100%", maxHeight: 190, objectFit: "contain" }} />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, fontSize: 16, fontWeight: 600, letterSpacing: "0.04em" }}>
+                  <span>{p.name.replace(/^CMB-\d+ /, "")}</span>
+                  <span style={{ fontWeight: 500, color: MUTED }}>{formatPrice(p.price)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              borderTop: `1px solid ${BORDER}`,
+              paddingTop: 18,
               fontSize: 18,
               fontWeight: 500,
               letterSpacing: "0.08em",
