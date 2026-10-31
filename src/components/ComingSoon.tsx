@@ -12,12 +12,18 @@ export default function ComingSoon() {
   const { theme, toggleTheme } = useTheme();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
-    addSubscriber(email);
-    setSubmitted(true);
+    if (!email.trim() || sending) return;
+    setSending(true);
+    setFailed(false);
+    const saved = await addSubscriber(email);
+    setSending(false);
+    if (saved) setSubmitted(true);
+    else setFailed(true);
   };
 
   return (
@@ -121,7 +127,7 @@ export default function ComingSoon() {
             animationDelay: "1.2s",
           }}
         >
-          Essentials from Colombo that are built to last. Drop 01 is almost here.
+          Essentials from Colombo that are built to last.
         </p>
 
         {/* Silhouette teaser */}
@@ -139,7 +145,7 @@ export default function ComingSoon() {
             />
           </div>
           <figcaption style={{ marginTop: 12, fontSize: 10, letterSpacing: "0.16em", color: "var(--text-muted)" }}>
-            01 / ???
+            CMB-01 / ???
           </figcaption>
         </figure>
 
@@ -181,6 +187,7 @@ export default function ComingSoon() {
                 />
                 <button
                   type="submit"
+                  disabled={sending}
                   style={{
                     height: 46,
                     padding: "0 22px",
@@ -189,13 +196,19 @@ export default function ComingSoon() {
                     color: "var(--btn-text)",
                     font: "500 12px 'IBM Plex Mono', monospace",
                     letterSpacing: "0.1em",
-                    cursor: "pointer",
+                    cursor: sending ? "wait" : "pointer",
+                    opacity: sending ? 0.6 : 1,
                     whiteSpace: "nowrap",
                   }}
                 >
-                  NOTIFY ME
+                  {sending ? "SENDING…" : "NOTIFY ME"}
                 </button>
               </form>
+              {failed && (
+                <div role="alert" style={{ marginTop: 12, fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
+                  Couldn&apos;t sign you up just now. Please try again.
+                </div>
+              )}
             </>
           )}
         </div>

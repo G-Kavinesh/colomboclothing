@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { usePreorder, PreorderStatus } from "@/lib/preorder-context";
 import { useProducts } from "@/lib/product-context";
 import { Product, formatPrice } from "@/lib/products";
+import type { Subscriber } from "@/lib/subscribers";
 import {
   verifyPassword,
   isSessionValid,
@@ -651,38 +652,114 @@ function ProductEditor({ product, onSave, onCancel }: {
 }
 
 /* ─── Subscribers Tab ─── */
+// The list lives on the server, so it needs the ADMIN_PASSWORD set in Vercel. It's
+// kept for this browser tab only, so you enter it once per visit.
+const SERVER_KEY = "colombo-admin-server-key";
+
+async function fetchSubscribers(key: string): Promise<Subscriber[] | "unauthorized" | "error"> {
+  try {
+    const res = await fetch("/api/subscribers", { headers: { "x-admin-password": key } });
+    if (res.status === 401) return "unauthorized";
+    if (!res.ok) return "error";
+    return (await res.json()).subscribers;
+  } catch {
+    return "error";
+  }
+}
+
 function SubscribersTab() {
-  const [subscribers, setSubscribers] = useState<string[]>([]);
+  const [password, setPassword] = useState(() => {
+    try {
+      return sessionStorage.getItem(SERVER_KEY) ?? "";
+    } catch {
+      return "";
+    }
+  });
+  const [input, setInput] = useState("");
+  const [subscribers, setSubscribers] = useState<Subscriber[] | null>(null);
+  const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("colombo-subscribers");
-      if (stored) setSubscribers(JSON.parse(stored));
-    } catch {}
-  }, []);
+    if (!password) return;
+    let cancelled = false;
+    fetchSubscribers(password).then((result) => {
+      if (cancelled) return;
+      if (result === "unauthorized") {
+        try { sessionStorage.removeItem(SERVER_KEY); } catch {}
+        setPassword("");
+        setError("WRONG PASSWORD");
+      } else if (result === "error") {
+        setError("COULDN'T LOAD SUBSCRIBERS. TRY AGAIN");
+      } else {
+        try { sessionStorage.setItem(SERVER_KEY, password); } catch {}
+        setError("");
+        setSubscribers(result);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [password]);
 
   const copyAll = () => {
-    const text = subscribers.join("\n");
+    if (!subscribers) return;
+    const text = subscribers.map((s) => s.email).join("\n");
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
 
-  const removeSubscriber = (email: string) => {
-    const updated = subscribers.filter((s) => s !== email);
-    setSubscribers(updated);
-    localStorage.setItem("colombo-subscribers", JSON.stringify(updated));
+  const removeSubscriber = async (email: string) => {
+    const res = await fetch(`/api/subscribers?email=${encodeURIComponent(email)}`, {
+      method: "DELETE",
+      headers: { "x-admin-password": password },
+    }).catch(() => null);
+    if (!res?.ok) {
+      setError("COULDN'T REMOVE. TRY AGAIN");
+      return;
+    }
+    setSubscribers((prev) => prev && prev.filter((s) => s.email !== email));
   };
+
+  if (!password) {
+    return (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (input) setPassword(input);
+        }}
+        style={{ maxWidth: 360, display: "flex", flexDirection: "column", gap: 12 }}
+      >
+        <div style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
+          ENTER THE SERVER ADMIN PASSWORD TO VIEW SUBSCRIBERS
+        </div>
+        <input
+          type="password"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Password"
+          aria-label="Server admin password"
+          style={inputStyle}
+        />
+        <button type="submit" style={{ height: 44, border: 0, background: "var(--btn-bg)", color: "var(--btn-text)", font: "500 12px 'IBM Plex Mono', monospace", letterSpacing: "0.1em", cursor: "pointer" }}>
+          UNLOCK
+        </button>
+        {error && <div style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>{error}</div>}
+      </form>
+    );
+  }
 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
         <div style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
-          {subscribers.length} SUBSCRIBER{subscribers.length !== 1 ? "S" : ""}
+          {subscribers === null
+            ? "LOADING…"
+            : `${subscribers.length} SUBSCRIBER${subscribers.length !== 1 ? "S" : ""}`}
         </div>
-        {subscribers.length > 0 && (
+        {subscribers && subscribers.length > 0 && (
           <button
             onClick={copyAll}
             style={{ padding: "8px 16px", border: "1px solid var(--border-light)", background: "transparent", color: "var(--text-muted)", font: "500 11px 'IBM Plex Mono', monospace", letterSpacing: "0.08em", cursor: "pointer" }}
@@ -692,12 +769,16 @@ function SubscribersTab() {
         )}
       </div>
 
-      {subscribers.length === 0 ? (
+      {error && (
+        <div style={{ marginBottom: 16, fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>{error}</div>
+      )}
+
+      {subscribers?.length === 0 ? (
         <div style={{ padding: "48px 0", textAlign: "center", fontSize: 13, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
           NO SUBSCRIBERS YET
         </div>
       ) : (
-        subscribers.map((email) => (
+        subscribers?.map(({ email, joinedAt }) => (
           <div
             key={email}
             style={{
@@ -706,17 +787,21 @@ function SubscribersTab() {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              gap: 12,
               fontSize: 13,
               letterSpacing: "0.04em",
             }}
           >
-            <span>{email}</span>
-            <button
-              onClick={() => removeSubscriber(email)}
-              style={{ border: 0, background: "none", color: "var(--text-muted)", font: "400 11px 'IBM Plex Mono', monospace", cursor: "pointer", letterSpacing: "0.06em" }}
-            >
-              REMOVE
-            </button>
+            <span style={{ minWidth: 0, overflowWrap: "anywhere" }}>{email}</span>
+            <span style={{ display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
+              <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{new Date(joinedAt).toLocaleDateString()}</span>
+              <button
+                onClick={() => removeSubscriber(email)}
+                style={{ border: 0, background: "none", color: "var(--text-muted)", font: "400 11px 'IBM Plex Mono', monospace", cursor: "pointer", letterSpacing: "0.06em" }}
+              >
+                REMOVE
+              </button>
+            </span>
           </div>
         ))
       )}

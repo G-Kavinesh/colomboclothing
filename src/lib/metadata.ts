@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { formatPrice, type Product } from "@/lib/products";
-import { OPEN_GRAPH_BASE, SITE_NAME, SITE_URL } from "@/lib/site";
+import { COMING_SOON, OPEN_GRAPH_BASE, SITE_NAME, SITE_URL } from "@/lib/site";
 
 // Pages that shouldn't show up in search results (bag, checkout, admin, etc).
 // They still get a proper title so a shared link reads correctly.
 export const NO_INDEX: Metadata["robots"] = { index: false, follow: true };
+
+// The shop and product pages stay out of search results until launch, so Google
+// doesn't show the pieces before Drop 01. They come back with the COMING_SOON flag.
+export const SHOP_ROBOTS: Metadata["robots"] = COMING_SOON ? NO_INDEX : undefined;
 
 // A layout that sets its own title must pass the template on, or the pages
 // beneath it lose the " — Colombo Clothing" suffix.
@@ -17,13 +21,15 @@ export function productMetadata(product: Product, path: string, title = product.
   return {
     title,
     description,
+    robots: SHOP_ROBOTS,
     alternates: { canonical: path },
     openGraph: {
       ...OPEN_GRAPH_BASE,
       url: path,
       images: [
         {
-          url: `/shop/${product.slug}/og.jpg`,
+          // Versioned like SITE_OG_IMAGE: the card's "pre-order" badge changes with this flag
+          url: `/shop/${product.slug}/og.jpg?v=${product.preorder ? "preorder" : "live"}`,
           width: 1200,
           height: 630,
           type: "image/jpeg",

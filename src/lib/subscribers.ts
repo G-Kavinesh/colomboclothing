@@ -1,13 +1,16 @@
-export const SUBSCRIBERS_KEY = "colombo-subscribers";
+export type Subscriber = { email: string; joinedAt: number };
 
-export function addSubscriber(email: string) {
+// Sends a signup to the server (see app/api/subscribers). Resolves false if it
+// wasn't saved, so the form can ask the visitor to try again.
+export async function addSubscriber(email: string): Promise<boolean> {
   try {
-    const stored = localStorage.getItem(SUBSCRIBERS_KEY);
-    const subscribers: string[] = stored ? JSON.parse(stored) : [];
-    const normalized = email.trim().toLowerCase();
-    if (!subscribers.includes(normalized)) {
-      subscribers.push(normalized);
-      localStorage.setItem(SUBSCRIBERS_KEY, JSON.stringify(subscribers));
-    }
-  } catch {}
+    const res = await fetch("/api/subscribers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }

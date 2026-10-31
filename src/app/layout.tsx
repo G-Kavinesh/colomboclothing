@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { CartProvider } from "@/lib/cart-context";
 import { ThemeProvider } from "@/lib/theme-context";
 import { PreorderProvider } from "@/lib/preorder-context";
@@ -50,6 +51,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </PreorderProvider>
           </ProductProvider>
         </ThemeProvider>
+        {/* Cookieless page-view counts, shown under Analytics in the Vercel dashboard */}
+        <Analytics />
       </body>
     </html>
   );

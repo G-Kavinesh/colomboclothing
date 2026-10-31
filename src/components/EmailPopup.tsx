@@ -13,6 +13,8 @@ export default function EmailPopup() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     try {
@@ -35,11 +37,18 @@ export default function EmailPopup() {
     }, 300);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim() || sending) return;
 
-    addSubscriber(email);
+    setSending(true);
+    setFailed(false);
+    const saved = await addSubscriber(email);
+    setSending(false);
+    if (!saved) {
+      setFailed(true);
+      return;
+    }
 
     setSubmitted(true);
     setTimeout(close, 2000);
@@ -198,6 +207,7 @@ export default function EmailPopup() {
               />
               <button
                 type="submit"
+                disabled={sending}
                 style={{
                   width: "100%",
                   height: 44,
@@ -206,11 +216,17 @@ export default function EmailPopup() {
                   color: "var(--btn-text)",
                   font: "500 12px 'IBM Plex Mono', monospace",
                   letterSpacing: "0.1em",
-                  cursor: "pointer",
+                  cursor: sending ? "wait" : "pointer",
+                  opacity: sending ? 0.6 : 1,
                 }}
               >
-                JOIN THE LIST
+                {sending ? "SENDING…" : "JOIN THE LIST"}
               </button>
+              {failed && (
+                <div role="alert" style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
+                  Couldn&apos;t sign you up just now. Please try again.
+                </div>
+              )}
             </form>
 
             <button
