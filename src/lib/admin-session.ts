@@ -37,13 +37,13 @@ export async function startSession() {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    path: "/api",
+    path: "/",
     maxAge: SESSION_SECONDS,
   });
 }
 
 export async function endSession() {
-  (await cookies()).delete({ name: COOKIE, path: "/api" });
+  (await cookies()).delete({ name: COOKIE, path: "/" });
 }
 
 // Whether the request carries a live session. With `renew`, the 30 minutes restart.

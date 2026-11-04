@@ -2,7 +2,8 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
-import { formatPrice, products, type Product } from "@/lib/products";
+import { formatPrice, type Product } from "@/lib/products";
+import { products } from "@/lib/product-data";
 import { COMING_SOON } from "@/lib/site";
 
 // Share images for link previews (WhatsApp, iMessage, Instagram, Facebook, X, LinkedIn,

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import PreorderForm from "@/components/PreorderForm";
-import { products, getProduct } from "@/lib/products";
+import { products, getProduct } from "@/lib/product-data";
 import { productMetadata } from "@/lib/metadata";
 
 export function generateStaticParams() {

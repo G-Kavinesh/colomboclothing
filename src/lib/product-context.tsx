@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
-import { products as defaultProducts, Product } from "./products";
+import type { Product } from "./products";
 
 type ProductContextType = {
   products: Product[];
@@ -16,7 +16,15 @@ const ProductContext = createContext<ProductContextType | null>(null);
 
 const STORAGE_KEY = "colombo-products";
 
-export function ProductProvider({ children }: { children: ReactNode }) {
+// The server passes in the product list (from lib/product-data), so it only reaches
+// the browser on pages that actually render the shop.
+export function ProductProvider({
+  children,
+  initialProducts: defaultProducts,
+}: {
+  children: ReactNode;
+  initialProducts: Product[];
+}) {
   const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [loaded, setLoaded] = useState(false);
 
@@ -38,7 +46,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
       }
     } catch {}
     setLoaded(true);
-  }, []);
+  }, [defaultProducts]);
 
   useEffect(() => {
     if (loaded) {
@@ -71,7 +79,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
   const resetProducts = useCallback(() => {
     setProducts(defaultProducts);
     localStorage.removeItem(STORAGE_KEY);
-  }, []);
+  }, [defaultProducts]);
 
   return (
     <ProductContext.Provider value={{ products, updateProduct, addProduct, deleteProduct, getProduct, resetProducts }}>

@@ -1,5 +1,5 @@
 import { productOgImage } from "@/lib/og";
-import { getProduct, products } from "@/lib/products";
+import { getProduct, products } from "@/lib/product-data";
 
 export const dynamic = "force-static";
 

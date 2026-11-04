@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { usePreorder, PreorderStatus } from "@/lib/preorder-context";
@@ -48,6 +49,7 @@ async function sessionStatus(renew = false) {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -93,6 +95,8 @@ export default function AdminDashboard() {
       setPassword("");
       if (res.ok) {
         setAuthenticated(true);
+        // The layout only sends the product list to a signed-in admin
+        router.refresh();
         return;
       }
       if (data.retryAfter) setLockedUntil(Date.now() + data.retryAfter * 1000);
@@ -102,11 +106,13 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    fetch("/api/admin/session", { method: "DELETE" }).catch(() => {});
+  const handleLogout = async () => {
+    await fetch("/api/admin/session", { method: "DELETE" }).catch(() => {});
     setAuthenticated(false);
     setPassword("");
     setError("");
+    // Drops the product list from the page
+    router.refresh();
   };
 
   if (loading) {

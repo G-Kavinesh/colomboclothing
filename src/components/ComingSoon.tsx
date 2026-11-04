@@ -148,7 +148,7 @@ export default function ComingSoon() {
         >
           <div className="cs-silhouette" style={{ position: "relative", aspectRatio: "1 / 1" }}>
             <Image
-              src="/images/tee-front.webp"
+              src="/images/silhouette-01.png"
               alt="Upcoming piece"
               fill
               sizes="200px"

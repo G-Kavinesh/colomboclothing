@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { SHOP_ROBOTS, TITLE_TEMPLATE } from "@/lib/metadata";
+import { ProductProvider } from "@/lib/product-context";
+import { products } from "@/lib/product-data";
 
 // Page is a client component, so its metadata lives here
 export const metadata: Metadata = {
@@ -10,5 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return children;
+  return <ProductProvider initialProducts={products}>{children}</ProductProvider>;
 }

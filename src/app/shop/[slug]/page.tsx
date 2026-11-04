@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ProductDetail from "@/components/ProductDetail";
-import { products, getProduct } from "@/lib/products";
+import { products, getProduct } from "@/lib/product-data";
 import { productJsonLd, productMetadata } from "@/lib/metadata";
 
 export function generateStaticParams() {
