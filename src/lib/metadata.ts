@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { formatPrice, type Product } from "@/lib/products";
-import { COMING_SOON, OPEN_GRAPH_BASE, SITE_NAME, SITE_URL } from "@/lib/site";
+import { COMING_SOON, OPEN_GRAPH_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 // Pages that shouldn't show up in search results (bag, checkout, admin, etc).
 // They still get a proper title so a shared link reads correctly.
@@ -37,6 +37,32 @@ export function productMetadata(product: Product, path: string, title = product.
         },
       ],
     },
+  };
+}
+
+// Home page structured data: tells Google the site name to show above results
+// ("Colombo Clothing" rather than the bare domain) and the brand logo.
+export function siteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        name: SITE_NAME,
+        alternateName: ["Colombo", "colomboclothing.com"],
+        url: `${SITE_URL}/`,
+        publisher: { "@id": `${SITE_URL}/#organization` },
+      },
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: SITE_NAME,
+        url: `${SITE_URL}/`,
+        logo: `${SITE_URL}/images/colombo-logo.png`,
+        description: SITE_DESCRIPTION,
+      },
+    ],
   };
 }
 
