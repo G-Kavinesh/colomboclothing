@@ -3,9 +3,9 @@
 export const COMING_SOON = true;
 
 export const SITE_NAME = "Colombo Clothing";
-export const SITE_TITLE = "Colombo Clothing — Heavyweight Oversize Essentials";
+export const SITE_TITLE = "Colombo Clothing - A Worldwide Department based in Sri Lanka";
 export const SITE_DESCRIPTION =
-  "Oversize essentials from Colombo — heavyweight, garment-dyed, built to last. A worldwide department based in Sri Lanka.";
+  "Soft, Heavy and Easy to Wear. Everyday clothing made in Colombo and shipped worldwide.";
 
 export const SITE_URL = "https://colomboclothing.com";
 
