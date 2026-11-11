@@ -98,7 +98,7 @@ async function comingSoonOgImage() {
               color: MUTED,
             }}
           >
-            100% COTTON · HEAVYWEIGHT · GARMENT-DYED · MADE IN COLOMBO
+            PREMIUM COTTON · HEAVYWEIGHT · GARMENT-DYED · MADE IN COLOMBO
           </div>
         </div>
       ),
@@ -177,7 +177,7 @@ async function collectionOgImage() {
               color: MUTED,
             }}
           >
-            100% COTTON · HEAVYWEIGHT · GARMENT-DYED · MADE IN COLOMBO
+            PREMIUM COTTON · HEAVYWEIGHT · GARMENT-DYED · MADE IN COLOMBO
           </div>
         </div>
       ),

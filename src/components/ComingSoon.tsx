@@ -7,7 +7,7 @@ import { addSubscriber, type SignupResult } from "@/lib/subscribers";
 import { BotTrap, SignupError } from "@/components/SignupFields";
 
 const HEADLINE = "COMING SOON";
-const TICKER = "100% COTTON · ESSENTIALS · MADE IN COLOMBO · HEAVYWEIGHT · GARMENT-DYED · CLOTHING MADE SIMPLE · ";
+const TICKER = "PREMIUM COTTON · ESSENTIALS · MADE IN COLOMBO · HEAVYWEIGHT · GARMENT-DYED · CLOTHING MADE SIMPLE · ";
 
 export default function ComingSoon() {
   const { theme, toggleTheme } = useTheme();
