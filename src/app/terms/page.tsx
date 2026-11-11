@@ -3,7 +3,7 @@ import InfoPage from "@/components/InfoPage";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
-  description: "The terms that apply to orders, pricing, shipping and returns at Colombo Clothing.",
+  description: "The terms that apply to orders, pricing, shipping and returns at Undefined Department.",
   alternates: { canonical: "/terms" },
 };
 
@@ -30,10 +30,10 @@ export default function TermsPage() {
       </Section>
       <Section title="5. INTELLECTUAL PROPERTY">
         All content on this site — including logos, images, and copy — is the property of
-        Colombo Clothing and may not be reproduced without written permission.
+        Undefined Department and may not be reproduced without written permission.
       </Section>
       <Section title="6. LIMITATION OF LIABILITY">
-        Colombo Clothing is not liable for any indirect or consequential damages arising from
+        Undefined Department is not liable for any indirect or consequential damages arising from
         the use of this site or our products, to the maximum extent permitted by law.
       </Section>
     </InfoPage>

@@ -3,7 +3,7 @@ import InfoPage from "@/components/InfoPage";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "How Colombo Clothing collects, uses and protects your personal data when you shop with us.",
+  description: "How Undefined Department collects, uses and protects your personal data when you shop with us.",
   alternates: { canonical: "/privacy" },
 };
 

@@ -56,7 +56,7 @@ export async function siteOgImage() {
 }
 
 async function comingSoonOgImage() {
-  const logo = await publicImage("/images/colombo-logo.png", 1280);
+  const logo = await publicImage("/images/udfdpt-logo.png", 1280);
 
   return toJpeg(
     new ImageResponse(
@@ -80,7 +80,7 @@ async function comingSoonOgImage() {
 
           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
             {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-            <img src={logo} width={640} height={238} />
+            <img src={logo} width={600} height={233} />
             <div style={{ marginTop: 36, fontSize: 34, fontWeight: 600, letterSpacing: "0.32em", marginRight: "-0.32em" }}>
               COMING SOON
             </div>
@@ -111,7 +111,7 @@ async function comingSoonOgImage() {
 async function collectionOgImage() {
   const lineup = products.slice(0, 4);
   const [logo, ...photos] = await Promise.all([
-    publicImage("/images/colombo-logo.png", 820),
+    publicImage("/images/udfdpt-logo.png", 820),
     ...lineup.map((p) => publicImage(p.shareImage ?? p.images[0].src, 480)),
   ]);
   const tileWidth = Math.floor((1200 - 128 - 24 * (lineup.length - 1)) / lineup.length);
@@ -138,7 +138,7 @@ async function collectionOgImage() {
 
           <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
             {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-            <img src={logo} width={410} height={153} />
+            <img src={logo} width={400} height={155} />
           </div>
 
           <div style={{ flex: 1, display: "flex", gap: 24, marginTop: 20, marginBottom: 22 }}>
@@ -158,7 +158,7 @@ async function collectionOgImage() {
                   <img src={photos[i]} style={{ maxWidth: "100%", maxHeight: 190, objectFit: "contain" }} />
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, fontSize: 16, fontWeight: 600, letterSpacing: "0.04em" }}>
-                  <span>{p.name.replace(/^CMB-\d+ /, "")}</span>
+                  <span>{p.name.replace(/^[A-Z]+-\d+ /, "")}</span>
                   <span style={{ fontWeight: 500, color: MUTED }}>{formatPrice(p.price)}</span>
                 </div>
               </div>
@@ -189,7 +189,7 @@ async function collectionOgImage() {
 export async function productOgImage(product: Product) {
   const [photo, logo] = await Promise.all([
     publicImage(product.shareImage ?? product.images[0].src, 1040),
-    publicImage("/images/colombo-logo.png", 560),
+    publicImage("/images/udfdpt-logo.png", 560),
   ]);
   const photoMeta = await sharp(join(root, "public", product.shareImage ?? product.images[0].src)).metadata();
   // Fit the photo inside a 520×520 box, keeping its aspect ratio
@@ -236,7 +236,7 @@ export async function productOgImage(product: Product) {
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-            <img src={logo} width={240} height={89} />
+            <img src={logo} width={240} height={93} />
 
             <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <div style={{ fontSize: 20, fontWeight: 500, letterSpacing: "0.12em", color: MUTED }}>

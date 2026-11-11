@@ -161,7 +161,7 @@ export default function EmailPopup() {
                 marginBottom: 12,
               }}
             >
-              COLOMBO CLOTHING
+              UNDEFINED DEPARTMENT
             </div>
             <div
               style={{

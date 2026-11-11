@@ -91,13 +91,13 @@ export default function ComingSoon() {
         {/* Logo */}
         <div className="cs-logo" style={{ width: "min(520px, 86vw)" }}>
           <Image
-            src="/images/colombo-logo.png"
-            alt="Colombo"
-            width={2056}
-            height={765}
+            src="/images/udfdpt-logo.png"
+            alt="Undefined Department"
+            width={1485}
+            height={577}
             loading="eager"
             fetchPriority="high"
-            style={{ width: "100%", height: "auto" }}
+            style={{ width: "100%", height: "auto", filter: "var(--logo)" }}
           />
         </div>
 
@@ -156,7 +156,7 @@ export default function ComingSoon() {
             />
           </div>
           <figcaption style={{ marginTop: 12, fontSize: 10, letterSpacing: "0.16em", color: "var(--text-muted)" }}>
-            CMB-01 / ???
+            UD-01 / ???
           </figcaption>
         </figure>
 
@@ -262,7 +262,7 @@ export default function ComingSoon() {
           color: "var(--text-muted)",
         }}
       >
-        <span>© {new Date().getFullYear()} COLOMBO CLOTHING</span>
+        <span>© {new Date().getFullYear()} UNDEFINED DEPARTMENT</span>
       </footer>
     </div>
   );

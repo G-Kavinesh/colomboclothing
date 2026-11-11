@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { formatPrice, type Product } from "@/lib/products";
-import { COMING_SOON, OPEN_GRAPH_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import {
+  COMING_SOON,
+  OG_VERSION,
+  OPEN_GRAPH_BASE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_SHORT_NAME,
+  SITE_URL,
+} from "@/lib/site";
 
 // Pages that shouldn't show up in search results (bag, checkout, admin, etc).
 // They still get a proper title so a shared link reads correctly.
@@ -11,7 +19,7 @@ export const NO_INDEX: Metadata["robots"] = { index: false, follow: true };
 export const SHOP_ROBOTS: Metadata["robots"] = COMING_SOON ? NO_INDEX : undefined;
 
 // A layout that sets its own title must pass the template on, or the pages
-// beneath it lose the " — Colombo Clothing" suffix.
+// beneath it lose the " — Undefined Department" suffix.
 export const TITLE_TEMPLATE = `%s — ${SITE_NAME}`;
 
 // Share preview for a product, used by both its shop page and its pre-order page.
@@ -29,7 +37,7 @@ export function productMetadata(product: Product, path: string, title = product.
       images: [
         {
           // Versioned like SITE_OG_IMAGE: the card's "pre-order" badge changes with this flag
-          url: `/shop/${product.slug}/og.jpg?v=${product.preorder ? "preorder" : "live"}`,
+          url: `/shop/${product.slug}/og.jpg?v=${OG_VERSION}-${product.preorder ? "preorder" : "live"}`,
           width: 1200,
           height: 630,
           type: "image/jpeg",
@@ -41,7 +49,7 @@ export function productMetadata(product: Product, path: string, title = product.
 }
 
 // Home page structured data: tells Google the site name to show above results
-// ("Colombo Clothing" rather than the bare domain) and the brand logo.
+// ("Undefined Department" rather than the bare domain) and the brand logo.
 export function siteJsonLd() {
   return {
     "@context": "https://schema.org",
@@ -50,7 +58,8 @@ export function siteJsonLd() {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
         name: SITE_NAME,
-        alternateName: ["Colombo", "colomboclothing.com"],
+        // The old name stays as an alternate so searches for it still find the site
+        alternateName: [SITE_SHORT_NAME, "Colombo Clothing", "colomboclothing.com"],
         url: `${SITE_URL}/`,
         publisher: { "@id": `${SITE_URL}/#organization` },
       },
@@ -59,7 +68,7 @@ export function siteJsonLd() {
         "@id": `${SITE_URL}/#organization`,
         name: SITE_NAME,
         url: `${SITE_URL}/`,
-        logo: `${SITE_URL}/images/colombo-logo.png`,
+        logo: `${SITE_URL}/images/udfdpt-logo.png`,
         description: SITE_DESCRIPTION,
       },
     ],
@@ -77,7 +86,7 @@ export function productJsonLd(product: Product) {
     image: [product.shareImage ?? product.images[0].src, ...product.images.map((i) => i.src)]
       .filter((src, i, all) => all.indexOf(src) === i)
       .map((src) => new URL(src, SITE_URL).toString()),
-    brand: { "@type": "Brand", name: "Colombo Clothing" },
+    brand: { "@type": "Brand", name: SITE_NAME },
     offers: {
       "@type": "Offer",
       url: new URL(`/shop/${product.slug}`, SITE_URL).toString(),

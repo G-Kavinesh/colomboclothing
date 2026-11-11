@@ -3,7 +3,7 @@ import InfoPage from "@/components/InfoPage";
 
 export const metadata: Metadata = {
   title: "Cookies",
-  description: "How Colombo Clothing uses cookies and local storage to keep your bag and preferences between visits.",
+  description: "How Undefined Department uses cookies and local storage to keep your bag and preferences between visits.",
   alternates: { canonical: "/cookies" },
 };
 

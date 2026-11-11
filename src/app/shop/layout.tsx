@@ -6,7 +6,7 @@ import { products } from "@/lib/product-data";
 // Page is a client component, so its metadata lives here
 export const metadata: Metadata = {
   title: { default: "Shop", template: TITLE_TEMPLATE },
-  description: "Shop heavyweight, garment-dyed oversize tees, caps and totes from Colombo Clothing.",
+  description: "Shop heavyweight, garment-dyed oversize tees, caps and totes from Undefined Department.",
   robots: SHOP_ROBOTS,
   alternates: { canonical: "/shop" },
 };

@@ -4,7 +4,7 @@ import { NO_INDEX } from "@/lib/metadata";
 // Page is a client component, so its metadata lives here
 export const metadata: Metadata = {
   title: "Order Status",
-  description: "Check the status of your Colombo Clothing order with your order number and email.",
+  description: "Check the status of your Undefined Department order with your order number and email.",
   robots: NO_INDEX,
 };
 
