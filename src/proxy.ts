@@ -1,13 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { COMING_SOON } from "@/lib/site";
 
-// Until launch (COMING_SOON in lib/site.ts) the shop is closed to everyone. Its pages
+// While COMING_SOON (lib/site.ts) is on, the shop is closed to everyone. Its pages
 // send visitors to the coming soon home page, and product photos and product share
 // cards return 404, including when asked for through the image optimizer.
 // Setting COMING_SOON to false opens everything again.
 
-// Product photos in public/images. The coming soon page uses silhouette-01.png instead.
-const PRODUCT_PHOTO = /^\/images\/(tee|cap|tote)-/;
+// Product photos in public/images/products. The coming soon page uses
+// silhouette-01.png instead.
+const PRODUCT_PHOTO = /^\/images\/products\//;
 
 function isProductPhoto(path: string) {
   try {

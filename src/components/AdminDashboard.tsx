@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { usePreorder, PreorderStatus } from "@/lib/preorder-context";
+import type { Preorder, PreorderStatus } from "@/lib/preorders";
 import { useProducts } from "@/lib/product-context";
 import { Product, formatPrice } from "@/lib/products";
 import type { Subscriber } from "@/lib/subscribers";
@@ -181,8 +181,8 @@ export default function AdminDashboard() {
 
         {/* Tab content */}
         <div style={{ width: "100%", maxWidth: 900, marginTop: 24 }}>
-          {tab === "overview" && <OverviewTab />}
-          {tab === "preorders" && <PreordersTab />}
+          {tab === "overview" && <OverviewTab onSessionExpired={expireSession} />}
+          {tab === "preorders" && <PreordersTab onSessionExpired={expireSession} />}
           {tab === "products" && <ProductsTab />}
           {tab === "subscribers" && <SubscribersTab onSessionExpired={expireSession} />}
         </div>
@@ -266,9 +266,60 @@ function LoginScreen({ password, setPassword, error, lockedUntil, onUnlock, onSu
   );
 }
 
+/* ─── Pre-orders ─── */
+// The list lives on the server and loads with the dashboard's sign-in session.
+// Each tab loads it fresh when opened.
+function usePreorders(onSessionExpired: () => void) {
+  const [preorders, setPreorders] = useState<Preorder[] | null>(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/preorders", { cache: "no-store" })
+      .then(async (res) => {
+        if (cancelled) return;
+        if (res.status === 401) return onSessionExpired();
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        setPreorders((await res.json()).preorders);
+      })
+      .catch(() => {
+        if (!cancelled) setError("COULDN'T LOAD PREORDERS. TRY AGAIN");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [onSessionExpired]);
+
+  const updateStatus = useCallback(
+    async (id: string, status: PreorderStatus) => {
+      const res = await fetch("/api/preorders", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status }),
+      }).catch(() => null);
+      if (res?.status === 401) return onSessionExpired();
+      if (!res?.ok) return setError("COULDN'T UPDATE. TRY AGAIN");
+      setPreorders((prev) => prev && prev.map((p) => (p.id === id ? { ...p, status } : p)));
+    },
+    [onSessionExpired]
+  );
+
+  return { preorders, error, updateStatus };
+}
+
+function LoadState({ loading, error }: { loading: boolean; error: string }) {
+  if (!loading && !error) return null;
+  return (
+    <div style={{ marginBottom: 16, fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
+      {error || "LOADING…"}
+    </div>
+  );
+}
+
 /* ─── Overview Tab ─── */
-function OverviewTab() {
-  const { preorders } = usePreorder();
+function OverviewTab({ onSessionExpired }: { onSessionExpired: () => void }) {
+  const { preorders: loaded, error } = usePreorders(onSessionExpired);
+  const preorders = loaded ?? [];
   const { products } = useProducts();
 
   const pending = preorders.filter((p) => p.status === "pending").length;
@@ -285,6 +336,8 @@ function OverviewTab() {
 
   return (
     <div>
+      <LoadState loading={loaded === null} error={error} />
+
       {/* Stats grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 16 }}>
         <StatCard label="TOTAL PREORDERS" value={preorders.length.toString()} />
@@ -302,7 +355,7 @@ function OverviewTab() {
         <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", marginBottom: 16 }}>
           RECENT PREORDERS
         </div>
-        {recentOrders.length === 0 ? (
+        {loaded && recentOrders.length === 0 ? (
           <div style={{ padding: "24px 0", fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
             NO PREORDERS YET
           </div>
@@ -325,7 +378,9 @@ function OverviewTab() {
               <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
                 <span style={{ fontWeight: 600 }}>{order.id}</span>
                 <span style={{ color: "var(--text-muted)" }}>{order.firstName} {order.lastName}</span>
-                <span style={{ color: "var(--text-muted)" }}>{order.productName} / {order.size}</span>
+                <span style={{ color: "var(--text-muted)" }}>
+                  {[order.productName, order.color, order.size].filter(Boolean).join(" / ")}
+                </span>
               </div>
               <span
                 style={{
@@ -357,8 +412,9 @@ function StatCard({ label, value, color }: { label: string; value: string; color
 }
 
 /* ─── Preorders Tab ─── */
-function PreordersTab() {
-  const { preorders, updateStatus } = usePreorder();
+function PreordersTab({ onSessionExpired }: { onSessionExpired: () => void }) {
+  const { preorders: loaded, error, updateStatus } = usePreorders(onSessionExpired);
+  const preorders = loaded ?? [];
   const [filter, setFilter] = useState<PreorderStatus | "all">("all");
   const [search, setSearch] = useState("");
 
@@ -384,6 +440,8 @@ function PreordersTab() {
 
   return (
     <div>
+      <LoadState loading={loaded === null} error={error} />
+
       {/* Search */}
       <input
         type="text"
@@ -415,7 +473,7 @@ function PreordersTab() {
       </div>
 
       {/* Preorder list */}
-      {filtered.length === 0 ? (
+      {loaded && filtered.length === 0 ? (
         <div style={{ padding: "48px 0", textAlign: "center", fontSize: 13, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
           NO PREORDERS FOUND
         </div>
@@ -443,7 +501,10 @@ function PreordersTab() {
 
               <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 24px", fontSize: 12, letterSpacing: "0.04em" }}>
                 <div><span style={{ color: "var(--text-muted)" }}>PRODUCT </span><span>{order.productName}</span></div>
-                <div><span style={{ color: "var(--text-muted)" }}>SIZE </span><span>{order.size}</span></div>
+                <div>
+                  <span style={{ color: "var(--text-muted)" }}>SIZE </span>
+                  <span>{order.color ? `${order.color} / ${order.size}` : order.size}</span>
+                </div>
                 <div><span style={{ color: "var(--text-muted)" }}>NAME </span><span>{order.firstName} {order.lastName}</span></div>
                 <div><span style={{ color: "var(--text-muted)" }}>PRICE </span><span>{formatPrice(order.price)}</span></div>
                 <div><span style={{ color: "var(--text-muted)" }}>EMAIL </span><span>{order.email}</span></div>

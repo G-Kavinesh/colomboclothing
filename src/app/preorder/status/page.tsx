@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { usePreorder, PreorderEntry } from "@/lib/preorder-context";
+import { lookupPreorder, type PreorderLookup } from "@/lib/preorders";
 import { formatPrice } from "@/lib/products";
 
 const inputStyle: React.CSSProperties = {
@@ -25,17 +25,23 @@ const statusColors: Record<string, string> = {
 };
 
 export default function PreorderStatusPage() {
-  const { getPreorder } = usePreorder();
   const [query, setQuery] = useState("");
-  const [result, setResult] = useState<PreorderEntry | null>(null);
-  const [searched, setSearched] = useState(false);
+  const [result, setResult] = useState<PreorderLookup | null>(null);
+  const [message, setMessage] = useState("");
+  const [checking, setChecking] = useState(false);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = query.trim().toUpperCase();
-    const found = getPreorder(trimmed);
-    setResult(found || null);
-    setSearched(true);
+    setChecking(true);
+    const found = await lookupPreorder(query.trim());
+    setChecking(false);
+    if (found === "not-found" || found === "error") {
+      setResult(null);
+      setMessage(found === "not-found" ? "NO PREORDER FOUND" : "COULDN'T CHECK RIGHT NOW. TRY AGAIN");
+      return;
+    }
+    setResult(found);
+    setMessage("");
   };
 
   return (
@@ -73,11 +79,12 @@ export default function PreorderStatusPage() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="PRE-XXXXX-XXX"
+            placeholder="UD-XXXXXXXX"
             style={inputStyle}
           />
           <button
             type="submit"
+            disabled={checking}
             style={{
               width: "100%",
               height: 44,
@@ -89,11 +96,11 @@ export default function PreorderStatusPage() {
               cursor: "pointer",
             }}
           >
-            CHECK STATUS
+            {checking ? "CHECKING..." : "CHECK STATUS"}
           </button>
         </form>
 
-        {searched && !result && (
+        {message && (
           <div
             style={{
               marginTop: 40,
@@ -102,7 +109,7 @@ export default function PreorderStatusPage() {
               color: "var(--text-muted)",
             }}
           >
-            NO PREORDER FOUND
+            {message}
           </div>
         )}
 
@@ -158,13 +165,19 @@ export default function PreorderStatusPage() {
                 <span style={{ color: "var(--text-muted)" }}>PRODUCT </span>
                 <span>{result.productName}</span>
               </div>
+              {result.color && (
+                <div>
+                  <span style={{ color: "var(--text-muted)" }}>COLOUR </span>
+                  <span>{result.color}</span>
+                </div>
+              )}
               <div>
                 <span style={{ color: "var(--text-muted)" }}>SIZE </span>
                 <span>{result.size}</span>
               </div>
               <div>
                 <span style={{ color: "var(--text-muted)" }}>NAME </span>
-                <span>{result.firstName} {result.lastName}</span>
+                <span>{result.firstName}</span>
               </div>
               <div>
                 <span style={{ color: "var(--text-muted)" }}>PRICE </span>

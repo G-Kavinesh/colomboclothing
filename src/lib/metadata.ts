@@ -83,7 +83,10 @@ export function productJsonLd(product: Product) {
     name: product.name,
     description: product.description,
     category: product.category,
-    image: [product.shareImage ?? product.images[0].src, ...product.images.map((i) => i.src)]
+    image: [
+      product.shareImage ?? product.images[0].src,
+      ...(product.colors?.flatMap((c) => c.images) ?? product.images).map((i) => i.src),
+    ]
       .filter((src, i, all) => all.indexOf(src) === i)
       .map((src) => new URL(src, SITE_URL).toString()),
     brand: { "@type": "Brand", name: SITE_NAME },

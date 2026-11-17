@@ -10,13 +10,15 @@ import SizeGuide from "@/components/SizeGuide";
 import AddToBag from "@/components/AddToBag";
 import { useCart } from "@/lib/cart-context";
 import { useProducts } from "@/lib/product-context";
-import { formatPrice } from "@/lib/products";
+import { formatPrice, imagesFor } from "@/lib/products";
 
-export default function ProductDetail({ slug }: { slug: string }) {
+// `featured` is the home page version: the same view without the breadcrumb
+export default function ProductDetail({ slug, featured = false }: { slug: string; featured?: boolean }) {
   const { getProduct } = useProducts();
   const product = getProduct(slug);
   const { addItem } = useCart();
   const router = useRouter();
+  const [color, setColor] = useState(product?.colors?.[0].name);
   const [imageIndex, setImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [status, setStatus] = useState("");
@@ -58,7 +60,7 @@ export default function ProductDetail({ slug }: { slug: string }) {
     );
   }
 
-  const imgs = product.images;
+  const imgs = imagesFor(product, color);
   const prev = () => setImageIndex((i) => (i - 1 + imgs.length) % imgs.length);
   const next = () => setImageIndex((i) => (i + 1) % imgs.length);
 
@@ -72,11 +74,11 @@ export default function ProductDetail({ slug }: { slug: string }) {
       name: product.name,
       price: product.price,
       size: selectedSize,
-      image: product.images[0].src,
+      image: imgs[0].src,
     });
     setStatus(`ADDED — SIZE ${selectedSize}`);
     return true;
-  }, [selectedSize, addItem, product]);
+  }, [selectedSize, addItem, product, imgs]);
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -92,23 +94,25 @@ export default function ProductDetail({ slug }: { slug: string }) {
         }}
       >
         {/* Breadcrumb */}
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 1100,
-            marginBottom: 24,
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            color: "var(--text-muted)",
-            textAlign: "center",
-          }}
-        >
-          <Link href="/" style={{ color: "var(--text-muted)" }}>
-            HOME
-          </Link>
-          <span style={{ margin: "0 8px" }}>/</span>
-          <span style={{ color: "var(--text)" }}>{product.name}</span>
-        </div>
+        {!featured && (
+          <div
+            style={{
+              width: "100%",
+              maxWidth: 1100,
+              marginBottom: 24,
+              fontSize: 12,
+              letterSpacing: "0.08em",
+              color: "var(--text-muted)",
+              textAlign: "center",
+            }}
+          >
+            <Link href="/" style={{ color: "var(--text-muted)" }}>
+              HOME
+            </Link>
+            <span style={{ margin: "0 8px" }}>/</span>
+            <span style={{ color: "var(--text)" }}>{product.name}</span>
+          </div>
+        )}
 
         {/* Image Carousel */}
         <div
@@ -151,15 +155,16 @@ export default function ProductDetail({ slug }: { slug: string }) {
             style={{
               position: "relative",
               width: "100%",
-              maxWidth: 620,
-              aspectRatio: "1 / 1",
+              // Portrait photos get a narrower frame so they fit on screen
+              maxWidth: product.imageRatio ? 460 : 620,
+              aspectRatio: product.imageRatio ?? "1 / 1",
               justifySelf: "center",
               isolation: "isolate",
             }}
           >
             {imgs.map((img, idx) => (
               <div
-                key={idx}
+                key={img.src}
                 style={{
                   position: "absolute",
                   inset: 0,
@@ -254,12 +259,57 @@ export default function ProductDetail({ slug }: { slug: string }) {
           {product.description}
         </p>
 
+        {/* Colour Selector */}
+        {product.colors && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 32 }}>
+            <div style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
+              COLOUR — <span style={{ color: "var(--text)" }}>{color}</span>
+            </div>
+            <div style={{ display: "flex", gap: 12, marginTop: 14 }}>
+              {product.colors.map((c) => {
+                const isSelected = c.name === color;
+                return (
+                  <button
+                    key={c.name}
+                    onClick={() => {
+                      setColor(c.name);
+                      setImageIndex(0);
+                    }}
+                    aria-label={c.name}
+                    aria-pressed={isSelected}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      padding: 3,
+                      borderRadius: "50%",
+                      cursor: "pointer",
+                      background: "transparent",
+                      border: isSelected ? "1.5px solid var(--text)" : "1.5px solid transparent",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "50%",
+                        background: c.swatch,
+                        boxShadow: "inset 0 0 0 1px var(--border-light)",
+                      }}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Size Selector */}
         <div
           style={{
             display: "flex",
             gap: 8,
-            marginTop: 36,
+            marginTop: product.colors ? 28 : 36,
             flexWrap: "wrap",
             justifyContent: "center",
           }}
@@ -325,7 +375,8 @@ export default function ProductDetail({ slug }: { slug: string }) {
                   setStatus("SELECT A SIZE");
                   return;
                 }
-                router.push(`/preorder/${product.slug}?size=${selectedSize}`);
+                const params = new URLSearchParams({ size: selectedSize, ...(color && { color }) });
+                router.push(`/preorder/${product.slug}?${params}`);
               }}
               style={{
                 width: "100%",

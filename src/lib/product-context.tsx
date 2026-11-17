@@ -14,7 +14,9 @@ type ProductContextType = {
 
 const ProductContext = createContext<ProductContextType | null>(null);
 
-const STORAGE_KEY = "colombo-products";
+// Renamed when the product line-up changes: browsers save the whole list here, and
+// an old saved list would bring removed products back as admin-added extras.
+const STORAGE_KEY = "udfdpt-products";
 
 // The server passes in the product list (from lib/product-data), so it only reaches
 // the browser on pages that actually render the shop.

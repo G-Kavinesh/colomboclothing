@@ -23,7 +23,9 @@ type CartContextType = {
 
 const CartContext = createContext<CartContextType | null>(null);
 
-const STORAGE_KEY = "colombo-cart";
+// Renamed when the product line-up changed, so bags holding removed products start
+// empty instead of showing items that no longer exist.
+const STORAGE_KEY = "udfdpt-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);

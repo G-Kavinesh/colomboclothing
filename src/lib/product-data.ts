@@ -1,56 +1,41 @@
-import type { Product } from "./products";
+import type { Product, ProductColor } from "./products";
 
 // Server-only: import this from server components, routes and metadata, never from a
 // "use client" file. Pages that render the shop hand the list to ProductProvider as a
 // prop, so it reaches the browser only when one of those pages is shown (and the
-// proxy keeps them closed until launch).
+// proxy keeps them closed while the coming soon page is up).
+
+// Photos live in public/images/products/<code>-<colour>-<n>.webp
+function colorway(code: string, label: string, name: string, swatch: string): ProductColor {
+  const views = ["back", "back, on model", "back, on model", "front", "front, on model"];
+  return {
+    name,
+    swatch,
+    images: views.map((view, i) => ({
+      src: `/images/products/${code}-${name.toLowerCase()}-${i + 1}.webp`,
+      alt: `${label} in ${name.toLowerCase()} — ${view}`,
+    })),
+  };
+}
+
+const teeColors = [
+  colorway("ud-01", "UD-01 Undefined Tee", "BURGUNDY", "#5a1520"),
+  colorway("ud-01", "UD-01 Undefined Tee", "BLACK", "#111111"),
+];
 
 export const products: Product[] = [
   {
-    slug: "ts-01-oversize-tee",
-    name: "UD-01 OVERSIZE TEE",
-    price: 4000,
+    slug: "ud-01-undefined-tee",
+    name: "UD-01 UNDEFINED TEE",
+    price: 3000,
     category: "TEES",
     description:
-      "Heavyweight 240gsm cotton oversize tee. Drop shoulder, ribbed crew neck, relaxed boxy fit. Pre-shrunk garment-dyed fabric with a lived-in softness from day one.",
+      "Boxy, cropped tee in premium heavyweight cotton. Dropped shoulders, a ribbed crew neck and an arched \"undefined\" print across the back, with the UDFDPT. script on the chest.",
     sizes: ["S", "M", "L", "XL", "XXL"],
-    images: [
-      { src: "/images/tee-front.webp", alt: "UD-01 Oversize Tee — front" },
-      { src: "/images/tee-back.webp", alt: "UD-01 Oversize Tee — back" },
-      { src: "/images/tee-side.png", alt: "UD-01 Oversize Tee — side" },
-    ],
-    shareImage: "/images/tee-back.webp",
-    preorder: true,
-    preorderNote: "Expected dispatch: 2–3 weeks",
-  },
-  {
-    slug: "cmb-02-cap",
-    name: "UD-01 CAP",
-    price: 3000,
-    category: "CAPS",
-    description:
-      "Structured six-panel cap with an embroidered front graphic. Adjustable strap closure, pre-curved brim, breathable cotton twill. One size fits all.",
-    sizes: ["ONE SIZE"],
-    images: [
-      { src: "/images/cap-view01.webp", alt: "UD-01 Cap — view 1" },
-      { src: "/images/cap-view02.webp", alt: "UD-01 Cap — view 2" },
-      { src: "/images/cap-view03.webp", alt: "UD-01 Cap — view 3" },
-    ],
-    preorder: true,
-    preorderNote: "Expected dispatch: 2–3 weeks",
-  },
-  {
-    slug: "cmb-01-tote",
-    name: "UD-01 TOTE",
-    price: 2000,
-    category: "BAGS",
-    description:
-      "Heavy-duty canvas tote with a printed front graphic. Reinforced stitching, spacious interior, sturdy handles. Built to carry everything.",
-    sizes: ["ONE SIZE"],
-    images: [
-      { src: "/images/tote-view01.webp", alt: "UD-01 Tote — view 1" },
-      { src: "/images/tote-view02.webp", alt: "UD-01 Tote — view 2" },
-    ],
+    images: teeColors[0].images,
+    colors: teeColors,
+    imageRatio: "2 / 3",
+    shareImage: teeColors[0].images[0].src,
     preorder: true,
     preorderNote: "Expected dispatch: 2–3 weeks",
   },

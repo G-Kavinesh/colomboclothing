@@ -6,8 +6,9 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useProducts } from "@/lib/product-context";
-import { formatPrice } from "@/lib/products";
-import { usePreorder } from "@/lib/preorder-context";
+import { formatPrice, imagesFor } from "@/lib/products";
+import { placePreorder } from "@/lib/preorders";
+import { BotTrap } from "@/components/SignupFields";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
@@ -35,9 +36,11 @@ export default function PreorderForm({ slug }: { slug: string }) {
   const product = getProduct(slug);
   const searchParams = useSearchParams();
   const size = searchParams.get("size") || "";
-  const { addPreorder } = usePreorder();
+  const color = searchParams.get("color") || undefined;
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [trap, setTrap] = useState("");
 
   if (!product) {
     return (
@@ -53,29 +56,36 @@ export default function PreorderForm({ slug }: { slug: string }) {
     );
   }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const image = imagesFor(product, color)[0];
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
-    const form = e.currentTarget;
-    const data = new FormData(form);
+    setError("");
+    const data = new FormData(e.currentTarget);
 
-    const id = addPreorder({
-      productSlug: product.slug,
-      productName: product.name,
-      size,
-      price: product.price,
-      firstName: data.get("firstName") as string,
-      lastName: data.get("lastName") as string,
-      email: data.get("email") as string,
-      phone: data.get("phone") as string,
-      address: data.get("address") as string,
-      city: data.get("city") as string,
-      postalCode: data.get("postalCode") as string,
-    });
+    const result = await placePreorder(
+      {
+        productSlug: product.slug,
+        color,
+        size,
+        firstName: data.get("firstName") as string,
+        lastName: data.get("lastName") as string,
+        email: data.get("email") as string,
+        phone: data.get("phone") as string,
+        address: data.get("address") as string,
+        city: data.get("city") as string,
+        postalCode: data.get("postalCode") as string,
+      },
+      trap
+    );
 
-    setTimeout(() => {
-      router.push(`/preorder/success?id=${id}`);
-    }, 800);
+    if (result.ok) {
+      router.push(`/preorder/success?id=${result.id}`);
+      return;
+    }
+    setError(result.error);
+    setSubmitting(false);
   };
 
   return (
@@ -109,8 +119,8 @@ export default function PreorderForm({ slug }: { slug: string }) {
         >
           <div style={{ position: "relative", width: 80, height: 80, flexShrink: 0 }}>
             <Image
-              src={product.images[0].src}
-              alt={product.images[0].alt}
+              src={image.src}
+              alt={image.alt}
               fill
               style={{ objectFit: "contain" }}
             />
@@ -119,6 +129,11 @@ export default function PreorderForm({ slug }: { slug: string }) {
             <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em" }}>
               {product.name}
             </div>
+            {color && (
+              <div style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
+                COLOUR: {color}
+              </div>
+            )}
             <div style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
               SIZE: {size}
             </div>
@@ -148,6 +163,8 @@ export default function PreorderForm({ slug }: { slug: string }) {
           <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", marginBottom: 4 }}>
             YOUR DETAILS
           </div>
+
+          <BotTrap value={trap} onChange={setTrap} />
 
           <div className="checkout-grid-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
@@ -247,6 +264,12 @@ export default function PreorderForm({ slug }: { slug: string }) {
           >
             {submitting ? "PLACING PREORDER..." : "CONFIRM PREORDER"}
           </button>
+
+          {error && (
+            <div role="alert" style={{ fontSize: 12, letterSpacing: "0.06em", color: "var(--text-muted)", textAlign: "center" }}>
+              {error}
+            </div>
+          )}
         </form>
       </main>
 

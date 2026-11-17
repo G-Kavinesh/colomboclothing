@@ -3,7 +3,6 @@ import { IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { CartProvider } from "@/lib/cart-context";
 import { ThemeProvider } from "@/lib/theme-context";
-import { PreorderProvider } from "@/lib/preorder-context";
 import EmailPopup from "@/components/EmailPopup";
 import { IS_PRODUCTION, OPEN_GRAPH_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -41,15 +40,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={ibmPlexMono.variable} suppressHydrationWarning>
       <body className={ibmPlexMono.className}>
         <ThemeProvider>
-          {/* Product data is loaded only by the shop, pre-order and admin routes
-              (see ProductProvider in their layouts), so the coming soon page
-              doesn't ship it to visitors */}
-          <PreorderProvider>
-            <CartProvider>
-              {children}
-              <EmailPopup />
-            </CartProvider>
-          </PreorderProvider>
+          {/* Product data is loaded only by the pages that show products (see
+              ProductProvider in their layouts), so the coming soon page doesn't
+              ship it to visitors */}
+          <CartProvider>
+            {children}
+            <EmailPopup />
+          </CartProvider>
         </ThemeProvider>
         {/* Cookieless page-view counts, shown under Analytics in the Vercel dashboard */}
         <Analytics />

@@ -18,7 +18,7 @@ export default function ProductCard({ product }: { product: Product }) {
         style={{
           position: "relative",
           width: "100%",
-          aspectRatio: "1 / 1",
+          aspectRatio: product.imageRatio ?? "1 / 1",
           isolation: "isolate",
         }}
       >

@@ -51,8 +51,11 @@ async function toJpeg(image: ImageResponse) {
   return new Response(new Uint8Array(jpeg), { headers: { "Content-Type": "image/jpeg" } });
 }
 
+// After launch: the line-up card when there's more than one product, otherwise the
+// lead product's own card, matching the home page
 export async function siteOgImage() {
-  return COMING_SOON ? comingSoonOgImage() : collectionOgImage();
+  if (COMING_SOON) return comingSoonOgImage();
+  return products.length > 1 ? collectionOgImage() : productOgImage(products[0]);
 }
 
 async function comingSoonOgImage() {
@@ -218,12 +221,18 @@ export async function productOgImage(product: Product) {
               background: "#fff",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-            <img
-              src={photo}
-              width={Math.round(photoMeta.width! * scale)}
-              height={Math.round(photoMeta.height! * scale)}
-            />
+            {product.imageRatio ? (
+              // Portrait studio shots have their own backdrop, so they fill the panel
+              // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+              <img src={photo} width={600} height={630} style={{ objectFit: "cover" }} />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+              <img
+                src={photo}
+                width={Math.round(photoMeta.width! * scale)}
+                height={Math.round(photoMeta.height! * scale)}
+              />
+            )}
           </div>
 
           <div

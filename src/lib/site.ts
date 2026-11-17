@@ -1,6 +1,7 @@
-// Set to false on launch to bring back the original product grid home page.
-// The home page share image follows this flag too.
-export const COMING_SOON = true;
+// True shows the coming soon page and closes the shop and pre-orders (see proxy.ts).
+// False puts the lead product on the home page with pre-orders open. The home page
+// share image follows this flag too.
+export const COMING_SOON = false;
 
 export const SITE_NAME = "Undefined Department";
 // Short form for tight spots: phone home-screen label, small print
@@ -19,7 +20,7 @@ export const IS_PRODUCTION = process.env.VERCEL_ENV === "production";
 // share image URLs carry a version: it changes with the launch flag, and
 // OG_VERSION is bumped whenever the card design or branding changes. Otherwise
 // people would keep seeing the old card.
-export const OG_VERSION = 2;
+export const OG_VERSION = 3;
 
 export const SITE_OG_IMAGE = {
   url: `/og.jpg?v=${OG_VERSION}-${COMING_SOON ? "soon" : "live"}`,

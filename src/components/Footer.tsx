@@ -28,7 +28,7 @@ export default function Footer() {
         <Link href="/privacy">PRIVACY</Link>
         <Link href="/accessibility">ACCESSIBILITY</Link>
         <Link href="/cookies">COOKIES</Link>
-        <Link href="/order-status">ORDER STATUS</Link>
+        <Link href="/preorder/status">ORDER STATUS</Link>
       </nav>
     </footer>
   );

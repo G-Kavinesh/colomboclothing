@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { addSubscriber, type SignupResult } from "@/lib/subscribers";
 import { BotTrap, SignupError } from "@/components/SignupFields";
+import { COMING_SOON } from "@/lib/site";
 
 const STORAGE_KEY = "colombo-email-popup";
 const DELAY_MS = 4000; // show after 4 seconds
@@ -66,7 +67,7 @@ export default function EmailPopup() {
   };
 
   // The coming soon page has its own signup form
-  if (!visible || pathname === "/") return null;
+  if (!visible || (COMING_SOON && pathname === "/")) return null;
 
   return (
     <div
