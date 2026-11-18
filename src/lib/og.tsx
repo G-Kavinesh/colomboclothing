@@ -21,7 +21,8 @@ const BG = "#f3f4f6";
 const TEXT = "#111";
 const MUTED = "#6b6b6b";
 const BORDER = "#d6d3cc";
-const DOMAIN = "colomboclothing.com";
+// Shown on the cards as the brand's web name
+const DOMAIN = "undefineddept.com";
 
 const root = process.cwd();
 

@@ -67,7 +67,7 @@ export default function Header() {
         className="header-brand"
         style={{ color: "var(--text)", fontWeight: 600, justifySelf: "center" }}
       >
-        colomboclothing.com
+        undefineddept.com
       </Link>
 
       <div

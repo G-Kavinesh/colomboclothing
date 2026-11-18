@@ -56,7 +56,7 @@ export default function ComingSoon() {
         <div className="header-nav-links" />
 
         <span className="header-brand" style={{ color: "var(--text)", fontWeight: 600, justifySelf: "center" }}>
-          colomboclothing.com
+          undefineddept.com
         </span>
 
         <div className="header-right" style={{ justifySelf: "end", display: "flex", alignItems: "center" }}>

@@ -20,7 +20,7 @@ export const IS_PRODUCTION = process.env.VERCEL_ENV === "production";
 // share image URLs carry a version: it changes with the launch flag, and
 // OG_VERSION is bumped whenever the card design or branding changes. Otherwise
 // people would keep seeing the old card.
-export const OG_VERSION = 3;
+export const OG_VERSION = 4;
 
 export const SITE_OG_IMAGE = {
   url: `/og.jpg?v=${OG_VERSION}-${COMING_SOON ? "soon" : "live"}`,
