@@ -10,30 +10,6 @@ export default function ComingSoon() {
     <div style={{ minHeight: "100svh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <SilkBackground />
 
-      {/* Top bar */}
-      <header
-        className="header-nav"
-        style={{
-          position: "relative",
-          zIndex: 1,
-          display: "grid",
-          gridTemplateColumns: "1fr auto 1fr",
-          alignItems: "center",
-          gap: 16,
-          padding: "20px clamp(16px, 5vw, 48px)",
-          fontSize: 13,
-          letterSpacing: "0.02em",
-        }}
-      >
-        <div className="header-nav-links" />
-
-        <span className="header-brand" style={{ color: "var(--text)", fontWeight: 500, justifySelf: "center" }}>
-          undefineddept.com
-        </span>
-
-        <div className="header-right" style={{ justifySelf: "end" }} />
-      </header>
-
       <main
         style={{
           position: "relative",
