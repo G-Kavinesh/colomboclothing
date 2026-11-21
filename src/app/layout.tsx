@@ -13,8 +13,6 @@ const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-mono",
 });
 
-// Open Graph and Twitter title/description are left unset here so every page's own
-// title and description flow into its share preview.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_TITLE, template: `%s — ${SITE_NAME}` },
@@ -24,31 +22,23 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
   appleWebApp: { title: SITE_NAME },
   formatDetection: { telephone: false },
-  // Only production builds are indexable (see IS_PRODUCTION).
   robots: IS_PRODUCTION ? { index: true, follow: true } : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3f4f6" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-  ],
+  themeColor: "#f7f4ee",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={ibmPlexMono.variable} suppressHydrationWarning>
+    <html lang="en" className={ibmPlexMono.variable}>
       <body className={ibmPlexMono.className}>
         <ThemeProvider>
-          {/* Product data is loaded only by the pages that show products (see
-              ProductProvider in their layouts), so the coming soon page doesn't
-              ship it to visitors */}
           <CartProvider>
             {children}
             <EmailPopup />
           </CartProvider>
         </ThemeProvider>
-        {/* Cookieless page-view counts, shown under Analytics in the Vercel dashboard */}
         <Analytics />
       </body>
     </html>

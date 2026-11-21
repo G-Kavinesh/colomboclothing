@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function CookiesPage() {
   return (
-    <InfoPage title="COOKIES">
+    <InfoPage title="Cookies">
       <p style={{ margin: "0 0 20px" }}>
         We use cookies and local storage to keep your shopping bag intact between visits
         and to remember basic site preferences. These are essential to the shopping experience

@@ -8,17 +8,17 @@ const inputStyle: React.CSSProperties = {
   height: 44,
   padding: "0 12px",
   border: "1px solid var(--border-light)",
+  borderRadius: 6,
   background: "transparent",
   font: "400 13px 'IBM Plex Mono', monospace",
-  letterSpacing: "0.04em",
   color: "var(--text)",
   boxSizing: "border-box",
 };
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 500,
-  letterSpacing: "0.08em",
+  fontSize: 12,
+  fontWeight: 400,
+  letterSpacing: "0.02em",
   color: "var(--text-muted)",
   marginBottom: 6,
   display: "block",
@@ -33,7 +33,7 @@ export default function ContactPage() {
   };
 
   return (
-    <InfoPage title="CONTACT">
+    <InfoPage title="Contact">
       <p style={{ marginTop: 0 }}>
         Have a question about your order, sizing, or anything else? Drop us a message and
         we&apos;ll get back to you within 24 hours.
@@ -50,12 +50,11 @@ export default function ContactPage() {
             padding: "32px 0",
             textAlign: "center",
             fontSize: 13,
-            letterSpacing: "0.08em",
             color: "var(--text)",
             fontWeight: 500,
           }}
         >
-          MESSAGE SENT — WE&apos;LL BE IN TOUCH
+          Message sent — we&apos;ll be in touch
         </div>
       ) : (
         <form
@@ -63,15 +62,15 @@ export default function ContactPage() {
           style={{ display: "flex", flexDirection: "column", gap: 16 }}
         >
           <div>
-            <label style={labelStyle}>NAME</label>
+            <label style={labelStyle}>Name</label>
             <input type="text" name="name" required style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>EMAIL</label>
+            <label style={labelStyle}>Email</label>
             <input type="email" name="email" required style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>MESSAGE</label>
+            <label style={labelStyle}>Message</label>
             <textarea
               name="message"
               required
@@ -90,10 +89,11 @@ export default function ContactPage() {
               width: "100%",
               height: 48,
               border: 0,
+              borderRadius: 6,
               background: "var(--btn-bg)",
               color: "var(--btn-text)",
               font: "500 13px 'IBM Plex Mono', monospace",
-              letterSpacing: "0.08em",
+              letterSpacing: "0.04em",
               cursor: "pointer",
               marginTop: 8,
             }}

@@ -1,7 +1,7 @@
 // True shows the coming soon page and closes the shop and pre-orders (see proxy.ts).
 // False puts the lead product on the home page with pre-orders open. The home page
 // share image follows this flag too.
-export const COMING_SOON = false;
+export const COMING_SOON = true;
 
 export const SITE_NAME = "Undefined Department";
 // Short form for tight spots: phone home-screen label, small print

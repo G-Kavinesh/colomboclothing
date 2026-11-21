@@ -4,36 +4,23 @@
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
-/* Light theme (default) */
+/* Light theme — warm neutrals */
 :root {
-  --bg: #f3f4f6;
-  --text: #111;
-  --text-muted: #6b6b6b;
-  --border: #ebe7de;
-  --border-light: #d6d3cc;
-  --dot-inactive: #cfcfcf;
-  --btn-bg: #111;
-  --btn-text: #fff;
-  --modal-bg: #f3f4f6;
-  --overlay: rgba(0, 0, 0, 0.4);
-  --link: #6b6b6b;
-  --link-hover: #111;
-}
-
-/* Dark theme */
-[data-theme="dark"] {
-  --bg: #0a0a0a;
-  --text: #e8e8e8;
-  --text-muted: #888;
-  --border: #222;
-  --border-light: #444;
-  --dot-inactive: #444;
-  --btn-bg: #fff;
-  --btn-text: #0a0a0a;
-  --modal-bg: #151515;
-  --overlay: rgba(0, 0, 0, 0.6);
-  --link: #888;
-  --link-hover: #fff;
+  --bg: #f7f4ee;
+  --text: #1f1b16;
+  --text-secondary: #5e554a;
+  --text-muted: #7b7266;
+  --border: rgba(31, 27, 22, 0.08);
+  --border-light: rgba(31, 27, 22, 0.14);
+  --dot-inactive: #cfc8bb;
+  --btn-bg: #1f1b16;
+  --btn-text: #f7f4ee;
+  --modal-bg: #fdfbf7;
+  --overlay: rgba(18, 17, 15, 0.5);
+  --link: #7b7266;
+  --link-hover: #1f1b16;
+  --surface-raised: #efe9df;
+  --silhouette: brightness(0) opacity(0.8);
 }
 
 body {
@@ -42,7 +29,6 @@ body {
   color: var(--text);
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   -webkit-font-smoothing: antialiased;
-  transition: background 0.2s, color 0.2s;
 }
 
 input,
@@ -66,13 +52,38 @@ a:hover {
   color: var(--link-hover);
 }
 
+/* Focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* Product detail split layout */
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  max-width: 1100px;
+  width: 100%;
+  padding: 24px 20px 48px;
+}
+
+@media (min-width: 800px) {
+  .product-detail-grid {
+    grid-template-columns: 55fr 45fr;
+    gap: 48px;
+    padding: 32px 40px 64px;
+    align-items: start;
+  }
+}
+
 /* Mobile responsive utilities */
 @media (max-width: 640px) {
   .header-nav {
     grid-template-columns: 1fr auto !important;
     padding: 16px 16px !important;
-    font-size: 11px !important;
-    gap: 10px !important;
+    font-size: 12px !important;
+    gap: 8px !important;
   }
 
   .header-nav-links {
@@ -88,7 +99,7 @@ a:hover {
   }
 
   .header-right {
-    gap: 14px !important;
+    gap: 12px !important;
   }
 
   .header-right .header-shop-mobile {
@@ -185,25 +196,9 @@ a:hover {
 }
 
 /* Coming soon page */
-:root {
-  --silhouette: brightness(0) opacity(0.85);
-  /* The logo file is black; dark mode flips it to near-white */
-  --logo: none;
-}
-
-[data-theme="dark"] {
-  --silhouette: brightness(0) invert(1) opacity(0.85);
-  --logo: invert(1);
-}
-
 @keyframes cs-rise {
   0% { opacity: 0; transform: translateY(16px) scale(0.97); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes cs-float {
-  0%, 100% { transform: translateY(0) rotate(-1deg); }
-  50% { transform: translateY(-10px) rotate(1deg); }
 }
 
 @keyframes cs-blink {
@@ -217,9 +212,7 @@ a:hover {
 }
 
 .cs-logo {
-  animation:
-    cs-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both,
-    cs-float 6s ease-in-out 0.9s infinite;
+  animation: cs-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .cs-char {
@@ -258,13 +251,18 @@ a:hover {
 @media (max-width: 640px) {
   .cs-form {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .cs-form input {
     flex: none !important;
     border-right: 1px solid var(--border-light) !important;
+    border-radius: 6px !important;
     text-align: center;
+  }
+
+  .cs-form button {
+    border-radius: 6px !important;
   }
 }
 

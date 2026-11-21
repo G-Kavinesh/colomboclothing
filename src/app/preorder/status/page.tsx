@@ -11,17 +11,17 @@ const inputStyle: React.CSSProperties = {
   height: 44,
   padding: "0 12px",
   border: "1px solid var(--border-light)",
+  borderRadius: 6,
   background: "transparent",
   font: "400 13px 'IBM Plex Mono', monospace",
-  letterSpacing: "0.04em",
   color: "var(--text)",
   boxSizing: "border-box",
 };
 
 const statusColors: Record<string, string> = {
-  pending: "#e2a832",
-  verified: "#34a853",
-  cancelled: "#ea4335",
+  pending: "#c49a2a",
+  verified: "#2d8a4e",
+  cancelled: "#c0392b",
 };
 
 export default function PreorderStatusPage() {
@@ -37,7 +37,7 @@ export default function PreorderStatusPage() {
     setChecking(false);
     if (found === "not-found" || found === "error") {
       setResult(null);
-      setMessage(found === "not-found" ? "NO PREORDER FOUND" : "COULDN'T CHECK RIGHT NOW. TRY AGAIN");
+      setMessage(found === "not-found" ? "No preorder found" : "Couldn\u2019t check right now. Try again");
       return;
     }
     setResult(found);
@@ -54,17 +54,17 @@ export default function PreorderStatusPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "48px 20px 48px",
+          padding: "40px 20px 48px",
         }}
       >
-        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 600, letterSpacing: "0.08em" }}>
-          PREORDER STATUS
+        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 500, letterSpacing: "0.02em" }}>
+          Preorder status
         </h1>
 
         <form
           onSubmit={handleSearch}
           style={{
-            marginTop: 40,
+            marginTop: 36,
             width: "100%",
             maxWidth: 400,
             display: "flex",
@@ -72,8 +72,8 @@ export default function PreorderStatusPage() {
             gap: 16,
           }}
         >
-          <div style={{ fontSize: 11, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
-            ENTER YOUR PREORDER ID
+          <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
+            Enter your preorder ID
           </div>
           <input
             type="text"
@@ -89,23 +89,25 @@ export default function PreorderStatusPage() {
               width: "100%",
               height: 44,
               border: 0,
+              borderRadius: 6,
               background: "var(--btn-bg)",
               color: "var(--btn-text)",
               font: "500 13px 'IBM Plex Mono', monospace",
-              letterSpacing: "0.08em",
+              letterSpacing: "0.04em",
               cursor: "pointer",
+              transition: "opacity 0.15s",
+              opacity: checking ? 0.6 : 1,
             }}
           >
-            {checking ? "CHECKING..." : "CHECK STATUS"}
+            {checking ? "Checking..." : "CHECK STATUS"}
           </button>
         </form>
 
         {message && (
           <div
             style={{
-              marginTop: 40,
+              marginTop: 36,
               fontSize: 13,
-              letterSpacing: "0.08em",
               color: "var(--text-muted)",
             }}
           >
@@ -116,14 +118,13 @@ export default function PreorderStatusPage() {
         {result && (
           <div
             style={{
-              marginTop: 40,
+              marginTop: 36,
               width: "100%",
               maxWidth: 480,
               padding: "24px 0",
               borderTop: "1px solid var(--border)",
             }}
           >
-            {/* Status badge */}
             <div
               style={{
                 display: "flex",
@@ -133,24 +134,23 @@ export default function PreorderStatusPage() {
                 gap: 8,
               }}
             >
-              <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em" }}>
+              <div style={{ fontSize: 13, fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>
                 {result.id}
               </div>
               <span
                 style={{
-                  fontSize: 10,
-                  fontWeight: 600,
-                  letterSpacing: "0.1em",
+                  fontSize: 11,
+                  fontWeight: 500,
                   color: statusColors[result.status],
-                  padding: "4px 10px",
+                  padding: "3px 8px",
                   border: `1px solid ${statusColors[result.status]}`,
+                  borderRadius: 4,
                 }}
               >
-                {result.status.toUpperCase()}
+                {result.status.charAt(0).toUpperCase() + result.status.slice(1)}
               </span>
             </div>
 
-            {/* Details */}
             <div
               style={{
                 marginTop: 20,
@@ -158,53 +158,50 @@ export default function PreorderStatusPage() {
                 gridTemplateColumns: "1fr 1fr",
                 gap: "12px 24px",
                 fontSize: 12,
-                letterSpacing: "0.04em",
               }}
             >
               <div>
-                <span style={{ color: "var(--text-muted)" }}>PRODUCT </span>
+                <span style={{ color: "var(--text-muted)" }}>Product </span>
                 <span>{result.productName}</span>
               </div>
               {result.color && (
                 <div>
-                  <span style={{ color: "var(--text-muted)" }}>COLOUR </span>
+                  <span style={{ color: "var(--text-muted)" }}>Colour </span>
                   <span>{result.color}</span>
                 </div>
               )}
               <div>
-                <span style={{ color: "var(--text-muted)" }}>SIZE </span>
+                <span style={{ color: "var(--text-muted)" }}>Size </span>
                 <span>{result.size}</span>
               </div>
               <div>
-                <span style={{ color: "var(--text-muted)" }}>NAME </span>
+                <span style={{ color: "var(--text-muted)" }}>Name </span>
                 <span>{result.firstName}</span>
               </div>
               <div>
-                <span style={{ color: "var(--text-muted)" }}>PRICE </span>
-                <span>{formatPrice(result.price)}</span>
+                <span style={{ color: "var(--text-muted)" }}>Price </span>
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>{formatPrice(result.price)}</span>
               </div>
               <div>
-                <span style={{ color: "var(--text-muted)" }}>DATE </span>
+                <span style={{ color: "var(--text-muted)" }}>Date </span>
                 <span>{new Date(result.createdAt).toLocaleDateString()}</span>
               </div>
             </div>
 
-            {/* Status explanation */}
             <div
               style={{
                 marginTop: 24,
                 padding: "16px 0",
                 borderTop: "1px solid var(--border)",
                 fontSize: 12,
-                letterSpacing: "0.06em",
                 color: "var(--text-muted)",
                 lineHeight: 1.7,
               }}
             >
               {result.status === "pending" &&
-                "Your preorder is being reviewed. We'll reach out via email or phone to confirm."}
+                "Your preorder is being reviewed. We\u2019ll reach out via email or phone to confirm."}
               {result.status === "verified" &&
-                "Your preorder has been verified. We'll dispatch your order and contact you with delivery details."}
+                "Your preorder has been verified. We\u2019ll dispatch your order and contact you with delivery details."}
               {result.status === "cancelled" &&
                 "This preorder has been cancelled. Contact us if you believe this is an error."}
             </div>

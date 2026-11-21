@@ -18,22 +18,22 @@ export default function InfoPage({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "48px 20px 48px",
+          padding: "40px 20px 48px",
         }}
       >
         <h1
           style={{
             margin: 0,
             fontSize: 18,
-            fontWeight: 600,
-            letterSpacing: "0.08em",
+            fontWeight: 500,
+            letterSpacing: "0.02em",
           }}
         >
           {title}
         </h1>
         <div
           style={{
-            marginTop: 40,
+            marginTop: 36,
             maxWidth: 600,
             width: "100%",
             fontSize: 13,

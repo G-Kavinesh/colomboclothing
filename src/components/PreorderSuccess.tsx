@@ -20,16 +20,16 @@ export default function PreorderSuccess() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: "48px 20px 48px",
+          padding: "48px 20px",
           textAlign: "center",
         }}
       >
         <div
           style={{
-            width: 56,
-            height: 56,
+            width: 52,
+            height: 52,
             borderRadius: "50%",
-            border: "2.5px solid var(--text)",
+            border: "2px solid var(--text)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -39,34 +39,35 @@ export default function PreorderSuccess() {
           <span
             style={{
               display: "block",
-              width: 14,
-              height: 24,
-              borderRight: "2.5px solid var(--text)",
-              borderBottom: "2.5px solid var(--text)",
+              width: 12,
+              height: 22,
+              borderRight: "2px solid var(--text)",
+              borderBottom: "2px solid var(--text)",
               transform: "rotate(45deg) translate(-2px, -2px)",
             }}
           />
         </div>
 
-        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 600, letterSpacing: "0.08em" }}>
-          PREORDER PLACED
+        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 500, letterSpacing: "0.02em" }}>
+          Preorder placed
         </h1>
 
         <div
           style={{
-            marginTop: 16,
+            marginTop: 12,
             fontSize: 12,
-            letterSpacing: "0.08em",
+            letterSpacing: "0.04em",
             color: "var(--text-muted)",
+            fontVariantNumeric: "tabular-nums",
           }}
         >
-          PREORDER #{id}
+          Preorder #{id}
         </div>
 
         <p
           style={{
             marginTop: 24,
-            maxWidth: 420,
+            maxWidth: 400,
             fontSize: 13,
             lineHeight: 1.7,
             color: "var(--text-muted)",
@@ -79,10 +80,10 @@ export default function PreorderSuccess() {
         <div
           style={{
             marginTop: 32,
-            padding: "16px 24px",
-            border: "1px solid var(--border)",
-            fontSize: 11,
-            letterSpacing: "0.06em",
+            padding: "14px 20px",
+            border: "1px solid var(--border-light)",
+            borderRadius: 8,
+            fontSize: 12,
             color: "var(--text-muted)",
             textAlign: "center",
           }}
@@ -90,31 +91,30 @@ export default function PreorderSuccess() {
           Save your preorder ID to track status
         </div>
 
-        <div style={{ marginTop: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+        <div style={{ marginTop: 36, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
           <Link
             href="/preorder/status"
             style={{
               fontSize: 13,
               fontWeight: 500,
-              letterSpacing: "0.08em",
+              letterSpacing: "0.02em",
               color: "var(--text)",
               borderBottom: "1px solid var(--text)",
               paddingBottom: 2,
             }}
           >
-            CHECK STATUS
+            Check status
           </Link>
           <Link
             href="/"
             style={{
               fontSize: 12,
-              letterSpacing: "0.08em",
               color: "var(--text-muted)",
               borderBottom: "1px solid var(--border-light)",
               paddingBottom: 2,
             }}
           >
-            CONTINUE SHOPPING
+            Continue shopping
           </Link>
         </div>
       </main>

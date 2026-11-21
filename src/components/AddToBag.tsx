@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
 type Props = {
-  onAdd: () => boolean; // returns true if item was added (size selected)
+  onAdd: () => boolean;
   statusText: string;
 };
 
@@ -14,12 +14,10 @@ export default function AddToBag({ onAdd, statusText }: Props) {
   const [currentText, setCurrentText] = useState("");
   const timerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  // Clean up timers
   useEffect(() => {
     return () => timerRef.current.forEach(clearTimeout);
   }, []);
 
-  // Typewriter effect when statusText changes
   useEffect(() => {
     if (!statusText) {
       setCurrentText("");
@@ -29,7 +27,6 @@ export default function AddToBag({ onAdd, statusText }: Props) {
     setCurrentText(statusText);
     setDisplayedChars(0);
 
-    // Clear any existing timers
     timerRef.current.forEach(clearTimeout);
     timerRef.current = [];
 
@@ -49,7 +46,6 @@ export default function AddToBag({ onAdd, statusText }: Props) {
     setAnimating(true);
     setShowCheck(true);
 
-    // Dispatch event so header can animate
     window.dispatchEvent(new CustomEvent("bag-item-added"));
 
     setTimeout(() => {
@@ -63,10 +59,9 @@ export default function AddToBag({ onAdd, statusText }: Props) {
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
+        alignItems: "flex-start",
       }}
     >
-      {/* Button container */}
       <button
         onClick={handleClick}
         aria-label="Add to bag"
@@ -80,7 +75,6 @@ export default function AddToBag({ onAdd, statusText }: Props) {
           position: "relative",
         }}
       >
-        {/* Expanding ring */}
         {animating && (
           <span
             style={{
@@ -96,7 +90,6 @@ export default function AddToBag({ onAdd, statusText }: Props) {
           />
         )}
 
-        {/* Plus / Check icon */}
         <div
           style={{
             position: "absolute",
@@ -108,27 +101,25 @@ export default function AddToBag({ onAdd, statusText }: Props) {
           }}
         >
           {showCheck ? (
-            // Checkmark
             <span
               style={{
                 display: "block",
                 width: 10,
                 height: 18,
-                borderRight: "2.5px solid var(--text)",
-                borderBottom: "2.5px solid var(--text)",
+                borderRight: "2px solid var(--text)",
+                borderBottom: "2px solid var(--text)",
                 transform: "rotate(45deg) translate(-1px, -1px)",
               }}
             />
           ) : (
-            // Plus
             <>
               <span
                 style={{
                   position: "absolute",
                   left: "50%",
                   top: "50%",
-                  width: 30,
-                  height: 2.5,
+                  width: 28,
+                  height: 2,
                   background: "var(--text)",
                   transform: "translate(-50%, -50%)",
                 }}
@@ -138,8 +129,8 @@ export default function AddToBag({ onAdd, statusText }: Props) {
                   position: "absolute",
                   left: "50%",
                   top: "50%",
-                  width: 2.5,
-                  height: 30,
+                  width: 2,
+                  height: 28,
                   background: "var(--text)",
                   transform: "translate(-50%, -50%)",
                 }}
@@ -149,13 +140,12 @@ export default function AddToBag({ onAdd, statusText }: Props) {
         </div>
       </button>
 
-      {/* Typewriter status text */}
       <div
         style={{
           minHeight: currentText ? 18 : 0,
-          marginTop: currentText ? 6 : 0,
+          marginTop: currentText ? 8 : 0,
           fontSize: 12,
-          letterSpacing: "0.08em",
+          letterSpacing: "0.02em",
           color: "var(--text-muted)",
           display: "flex",
           alignItems: "center",
@@ -175,7 +165,6 @@ export default function AddToBag({ onAdd, statusText }: Props) {
             {char}
           </span>
         ))}
-        {/* Blinking cursor during typing */}
         {currentText && displayedChars < currentText.length && (
           <span
             style={{

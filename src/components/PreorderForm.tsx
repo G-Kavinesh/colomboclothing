@@ -15,17 +15,17 @@ const inputStyle: React.CSSProperties = {
   height: 44,
   padding: "0 12px",
   border: "1px solid var(--border-light)",
+  borderRadius: 6,
   background: "transparent",
   font: "400 13px 'IBM Plex Mono', monospace",
-  letterSpacing: "0.04em",
   color: "var(--text)",
   boxSizing: "border-box",
 };
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 500,
-  letterSpacing: "0.08em",
+  fontSize: 12,
+  fontWeight: 400,
+  letterSpacing: "0.02em",
   color: "var(--text-muted)",
   marginBottom: 6,
   display: "block",
@@ -47,8 +47,8 @@ export default function PreorderForm({ slug }: { slug: string }) {
       <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <Header />
         <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 20px" }}>
-          <div style={{ fontSize: 13, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
-            PRODUCT NOT FOUND
+          <div style={{ fontSize: 13, letterSpacing: "0.02em", color: "var(--text-muted)" }}>
+            Product not found
           </div>
         </main>
         <Footer />
@@ -98,11 +98,11 @@ export default function PreorderForm({ slug }: { slug: string }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "48px 20px 48px",
+          padding: "40px 20px 48px",
         }}
       >
-        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 600, letterSpacing: "0.08em" }}>
-          PREORDER
+        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 500, letterSpacing: "0.02em" }}>
+          Preorder
         </h1>
 
         {/* Product summary */}
@@ -126,22 +126,22 @@ export default function PreorderForm({ slug }: { slug: string }) {
             />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em" }}>
+            <div style={{ fontSize: 13, fontWeight: 500, letterSpacing: "0.04em" }}>
               {product.name}
             </div>
             {color && (
-              <div style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
-                COLOUR: {color}
+              <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
+                Colour: {color}
               </div>
             )}
-            <div style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
-              SIZE: {size}
+            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
+              Size: {size}
             </div>
-            <div style={{ fontSize: 13, fontWeight: 500, marginTop: 4 }}>
+            <div style={{ fontSize: 13, fontWeight: 400, marginTop: 4 }}>
               {formatPrice(product.price)}
             </div>
             {product.preorderNote && (
-              <div style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--text-muted)", marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>
                 {product.preorderNote}
               </div>
             )}
@@ -160,57 +160,57 @@ export default function PreorderForm({ slug }: { slug: string }) {
             gap: 20,
           }}
         >
-          <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", marginBottom: 4 }}>
-            YOUR DETAILS
+          <div style={{ fontSize: 13, fontWeight: 500, letterSpacing: "0.02em", marginBottom: 4 }}>
+            Your details
           </div>
 
           <BotTrap value={trap} onChange={setTrap} />
 
           <div className="checkout-grid-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={labelStyle}>FIRST NAME</label>
+              <label style={labelStyle}>First name</label>
               <input type="text" name="firstName" required style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>LAST NAME</label>
+              <label style={labelStyle}>Last name</label>
               <input type="text" name="lastName" required style={inputStyle} />
             </div>
           </div>
 
           <div>
-            <label style={labelStyle}>EMAIL</label>
+            <label style={labelStyle}>Email</label>
             <input type="email" name="email" required style={inputStyle} placeholder="you@email.com" />
           </div>
 
           <div>
-            <label style={labelStyle}>PHONE</label>
+            <label style={labelStyle}>Phone</label>
             <input type="tel" name="phone" required style={inputStyle} placeholder="+94 7X XXX XXXX" />
           </div>
 
           <div
             style={{
               fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: "0.06em",
+              fontWeight: 500,
+              letterSpacing: "0.02em",
               marginTop: 16,
               marginBottom: 4,
             }}
           >
-            SHIPPING ADDRESS
+            Shipping address
           </div>
 
           <div>
-            <label style={labelStyle}>ADDRESS</label>
+            <label style={labelStyle}>Address</label>
             <input type="text" name="address" required style={inputStyle} />
           </div>
 
           <div className="checkout-grid-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={labelStyle}>CITY</label>
+              <label style={labelStyle}>City</label>
               <input type="text" name="city" required style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>POSTAL CODE</label>
+              <label style={labelStyle}>Postal code</label>
               <input type="text" name="postalCode" required style={inputStyle} />
             </div>
           </div>
@@ -223,7 +223,6 @@ export default function PreorderForm({ slug }: { slug: string }) {
               borderTop: "1px solid var(--border)",
               borderBottom: "1px solid var(--border)",
               fontSize: 12,
-              letterSpacing: "0.06em",
               color: "var(--text-muted)",
               display: "flex",
               alignItems: "center",
@@ -235,7 +234,7 @@ export default function PreorderForm({ slug }: { slug: string }) {
                 width: 18,
                 height: 18,
                 borderRadius: "50%",
-                border: "2px solid var(--text)",
+                border: "1.5px solid var(--text)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -244,7 +243,7 @@ export default function PreorderForm({ slug }: { slug: string }) {
             >
               <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--text)" }} />
             </span>
-            CASH ON DELIVERY — {formatPrice(product.price)}
+            Cash on delivery — {formatPrice(product.price)}
           </div>
 
           <button
@@ -254,19 +253,21 @@ export default function PreorderForm({ slug }: { slug: string }) {
               width: "100%",
               height: 48,
               border: 0,
+              borderRadius: 6,
               background: submitting ? "var(--text-muted)" : "var(--btn-bg)",
               color: "var(--btn-text)",
               font: "500 13px 'IBM Plex Mono', monospace",
-              letterSpacing: "0.08em",
+              letterSpacing: "0.04em",
               cursor: submitting ? "default" : "pointer",
               marginTop: 8,
+              transition: "background 0.15s",
             }}
           >
-            {submitting ? "PLACING PREORDER..." : "CONFIRM PREORDER"}
+            {submitting ? "Placing preorder..." : "CONFIRM PREORDER"}
           </button>
 
           {error && (
-            <div role="alert" style={{ fontSize: 12, letterSpacing: "0.06em", color: "var(--text-muted)", textAlign: "center" }}>
+            <div role="alert" style={{ fontSize: 12, color: "var(--text-muted)", textAlign: "center" }}>
               {error}
             </div>
           )}

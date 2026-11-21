@@ -9,23 +9,23 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <InfoPage title="PRIVACY POLICY">
-      <Section title="WHAT WE COLLECT">
+    <InfoPage title="Privacy policy">
+      <Section title="What we collect">
         When you place an order, we collect your name, email, phone number, shipping address,
         and payment information. We also collect basic analytics data (pages visited, device type)
         to improve the shopping experience.
       </Section>
-      <Section title="HOW WE USE IT">
+      <Section title="How we use it">
         Your information is used solely to process orders, ship products, and communicate with
         you about your purchase. We do not sell or share your personal data with third parties
         for marketing purposes.
       </Section>
-      <Section title="DATA STORAGE">
+      <Section title="Data storage">
         Your data is stored securely and retained only as long as necessary to fulfill your
         order and comply with legal obligations. Payment information is processed by our
         payment provider and is never stored on our servers.
       </Section>
-      <Section title="YOUR RIGHTS">
+      <Section title="Your rights">
         You may request access to, correction of, or deletion of your personal data at any
         time by contacting us at hello@colomboclothing.com.
       </Section>
@@ -39,8 +39,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <h2
         style={{
           fontSize: 13,
-          fontWeight: 600,
-          letterSpacing: "0.06em",
+          fontWeight: 500,
           color: "var(--text)",
           margin: "0 0 8px",
         }}

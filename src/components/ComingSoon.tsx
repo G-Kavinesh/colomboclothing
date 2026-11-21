@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useTheme } from "@/lib/theme-context";
 import { addSubscriber, type SignupResult } from "@/lib/subscribers";
 import { BotTrap, SignupError } from "@/components/SignupFields";
 
@@ -10,7 +9,6 @@ const HEADLINE = "COMING SOON";
 const TICKER = "PREMIUM COTTON · ESSENTIALS · MADE IN COLOMBO · HEAVYWEIGHT · GARMENT-DYED · CLOTHING MADE SIMPLE · ";
 
 export default function ComingSoon() {
-  const { theme, toggleTheme } = useTheme();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState<"new" | "already" | null>(null);
   const [sending, setSending] = useState(false);
@@ -47,34 +45,18 @@ export default function ComingSoon() {
           gridTemplateColumns: "1fr auto 1fr",
           alignItems: "center",
           gap: 16,
-          padding: "24px clamp(16px, 5vw, 64px)",
+          padding: "20px clamp(16px, 5vw, 48px)",
           fontSize: 13,
-          letterSpacing: "0.08em",
+          letterSpacing: "0.02em",
         }}
       >
-        {/* Empty left column keeps the brand centred */}
         <div className="header-nav-links" />
 
-        <span className="header-brand" style={{ color: "var(--text)", fontWeight: 600, justifySelf: "center" }}>
+        <span className="header-brand" style={{ color: "var(--text)", fontWeight: 500, justifySelf: "center" }}>
           undefineddept.com
         </span>
 
-        <div className="header-right" style={{ justifySelf: "end", display: "flex", alignItems: "center" }}>
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            style={{
-              width: 20,
-              height: 20,
-              padding: 0,
-              border: "1.5px solid var(--text)",
-              borderRadius: "50%",
-              cursor: "pointer",
-              background: theme === "dark" ? "var(--text)" : "transparent",
-              transition: "background 0.2s",
-            }}
-          />
-        </div>
+        <div className="header-right" style={{ justifySelf: "end" }} />
       </header>
 
       <main
@@ -84,20 +66,20 @@ export default function ComingSoon() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: "32px 16px 56px",
+          padding: "32px 16px 48px",
           textAlign: "center",
         }}
       >
         {/* Logo */}
-        <div className="cs-logo" style={{ width: "min(520px, 86vw)" }}>
+        <div className="cs-logo" style={{ width: "min(560px, 88vw)" }}>
           <Image
-            src="/images/udfdpt-logo.png"
+            src="/images/undefined-dept-logo.png"
             alt="Undefined Department"
-            width={1485}
-            height={577}
+            width={1920}
+            height={300}
             loading="eager"
             fetchPriority="high"
-            style={{ width: "100%", height: "auto", filter: "var(--logo)" }}
+            style={{ width: "100%", height: "auto" }}
           />
         </div>
 
@@ -105,11 +87,11 @@ export default function ComingSoon() {
         <h1
           aria-label={HEADLINE}
           style={{
-            margin: "40px 0 0",
-            fontSize: "clamp(22px, 5vw, 34px)",
-            fontWeight: 600,
-            letterSpacing: "0.32em",
-            marginRight: "-0.32em",
+            margin: "36px 0 0",
+            fontSize: "clamp(20px, 4.5vw, 32px)",
+            fontWeight: 500,
+            letterSpacing: "0.2em",
+            marginRight: "-0.2em",
             color: "var(--text)",
           }}
         >
@@ -120,7 +102,7 @@ export default function ComingSoon() {
               className="cs-char"
               style={{ animationDelay: `${0.4 + i * 0.06}s` }}
             >
-              {char === " " ? " " : char}
+              {char === " " ? " " : char}
             </span>
           ))}
           <span className="cs-cursor" aria-hidden />
@@ -130,10 +112,9 @@ export default function ComingSoon() {
           className="cs-fade"
           style={{
             margin: "20px 0 0",
-            maxWidth: 420,
-            fontSize: 12,
-            lineHeight: 1.8,
-            letterSpacing: "0.06em",
+            maxWidth: 400,
+            fontSize: 13,
+            lineHeight: 1.7,
             color: "var(--text-muted)",
             animationDelay: "1.2s",
           }}
@@ -144,7 +125,7 @@ export default function ComingSoon() {
         {/* Silhouette teaser */}
         <figure
           className="cs-fade"
-          style={{ margin: "48px 0 0", width: "clamp(140px, 40vw, 200px)", animationDelay: "1.4s" }}
+          style={{ margin: "40px 0 0", width: "clamp(140px, 36vw, 200px)", animationDelay: "1.4s" }}
         >
           <div className="cs-silhouette" style={{ position: "relative", aspectRatio: "1 / 1" }}>
             <Image
@@ -155,26 +136,26 @@ export default function ComingSoon() {
               style={{ objectFit: "contain" }}
             />
           </div>
-          <figcaption style={{ marginTop: 12, fontSize: 10, letterSpacing: "0.16em", color: "var(--text-muted)" }}>
+          <figcaption style={{ marginTop: 12, fontSize: 11, letterSpacing: "0.04em", color: "var(--text-muted)" }}>
             UD-01 / ???
           </figcaption>
         </figure>
 
         {/* Signup */}
-        <div className="cs-fade" style={{ marginTop: 48, width: "100%", maxWidth: 440, animationDelay: "1.6s" }}>
+        <div className="cs-fade" style={{ marginTop: 40, width: "100%", maxWidth: 420, animationDelay: "1.6s" }}>
           {submitted ? (
             <div style={{ padding: "14px 0" }}>
-              <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.08em", color: "var(--text)" }}>
-                {submitted === "already" ? <>YOU&apos;RE ALREADY ON THE LIST</> : <>YOU&apos;RE ON THE LIST</>}
+              <div style={{ fontSize: 14, fontWeight: 500, letterSpacing: "0.02em", color: "var(--text)" }}>
+                {submitted === "already" ? <>You&apos;re already on the list</> : <>You&apos;re on the list</>}
               </div>
-              <div style={{ marginTop: 10, fontSize: 12, letterSpacing: "0.06em", color: "var(--text-muted)" }}>
+              <div style={{ marginTop: 10, fontSize: 12, color: "var(--text-muted)" }}>
                 We&apos;ll email you the moment Drop 01 goes live.
               </div>
             </div>
           ) : (
             <>
-              <div style={{ marginBottom: 14, fontSize: 11, letterSpacing: "0.12em", color: "var(--text-muted)" }}>
-                BE FIRST IN LINE
+              <div style={{ marginBottom: 12, fontSize: 12, letterSpacing: "0.04em", color: "var(--text-muted)" }}>
+                Be first in line
               </div>
               <form className="cs-form" onSubmit={handleSubmit} style={{ display: "flex", width: "100%" }}>
                 <BotTrap value={trap} onChange={setTrap} />
@@ -188,12 +169,12 @@ export default function ComingSoon() {
                   style={{
                     flex: 1,
                     minWidth: 0,
-                    height: 46,
+                    height: 44,
                     padding: "0 14px",
                     border: "1px solid var(--border-light)",
                     borderRight: 0,
+                    borderRadius: "6px 0 0 6px",
                     font: "400 13px 'IBM Plex Mono', monospace",
-                    letterSpacing: "0.04em",
                     boxSizing: "border-box",
                   }}
                 />
@@ -201,19 +182,21 @@ export default function ComingSoon() {
                   type="submit"
                   disabled={sending}
                   style={{
-                    height: 46,
-                    padding: "0 22px",
+                    height: 44,
+                    padding: "0 20px",
                     border: 0,
+                    borderRadius: "0 6px 6px 0",
                     background: "var(--btn-bg)",
                     color: "var(--btn-text)",
                     font: "500 12px 'IBM Plex Mono', monospace",
-                    letterSpacing: "0.1em",
+                    letterSpacing: "0.04em",
                     cursor: sending ? "wait" : "pointer",
                     opacity: sending ? 0.6 : 1,
                     whiteSpace: "nowrap",
+                    transition: "opacity 0.15s",
                   }}
                 >
-                  {sending ? "SENDING…" : "NOTIFY ME"}
+                  {sending ? "Sending..." : "NOTIFY ME"}
                 </button>
               </form>
               {failure && (
@@ -234,13 +217,13 @@ export default function ComingSoon() {
       <div
         aria-hidden
         style={{
-          borderTop: "2px solid var(--border)",
-          borderBottom: "2px solid var(--border)",
-          padding: "14px 0",
+          borderTop: "1px solid var(--border-light)",
+          borderBottom: "1px solid var(--border-light)",
+          padding: "12px 0",
           overflow: "hidden",
           whiteSpace: "nowrap",
-          fontSize: 12,
-          letterSpacing: "0.14em",
+          fontSize: 11,
+          letterSpacing: "0.08em",
           color: "var(--text-muted)",
         }}
       >
@@ -253,16 +236,16 @@ export default function ComingSoon() {
       <footer
         className="footer-copy"
         style={{
-          padding: "20px 16px 28px",
+          padding: "16px 16px 24px",
           display: "flex",
           justifyContent: "center",
           gap: 24,
           fontSize: 11,
-          letterSpacing: "0.08em",
+          letterSpacing: "0.02em",
           color: "var(--text-muted)",
         }}
       >
-        <span>© {new Date().getFullYear()} UNDEFINED DEPARTMENT</span>
+        <span>&copy; {new Date().getFullYear()} Undefined Department</span>
       </footer>
     </div>
   );

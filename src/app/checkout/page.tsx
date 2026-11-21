@@ -12,17 +12,17 @@ const inputStyle: React.CSSProperties = {
   height: 44,
   padding: "0 12px",
   border: "1px solid var(--border-light)",
+  borderRadius: 6,
   background: "transparent",
   font: "400 13px 'IBM Plex Mono', monospace",
-  letterSpacing: "0.04em",
   color: "var(--text)",
   boxSizing: "border-box",
 };
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 500,
-  letterSpacing: "0.08em",
+  fontSize: 12,
+  fontWeight: 400,
+  letterSpacing: "0.02em",
   color: "var(--text-muted)",
   marginBottom: 6,
   display: "block",
@@ -37,7 +37,6 @@ export default function CheckoutPage() {
     e.preventDefault();
     setSubmitting(true);
 
-    // Simulate order processing
     setTimeout(() => {
       clearCart();
       router.push("/checkout/success");
@@ -58,8 +57,8 @@ export default function CheckoutPage() {
             padding: "48px 20px",
           }}
         >
-          <div style={{ fontSize: 13, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
-            NOTHING TO CHECKOUT
+          <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
+            Nothing to checkout
           </div>
         </main>
         <Footer />
@@ -77,18 +76,18 @@ export default function CheckoutPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "48px 20px 48px",
+          padding: "40px 20px 48px",
         }}
       >
         <h1
           style={{
             margin: 0,
             fontSize: 18,
-            fontWeight: 600,
-            letterSpacing: "0.08em",
+            fontWeight: 500,
+            letterSpacing: "0.02em",
           }}
         >
-          CHECKOUT
+          Checkout
         </h1>
 
         <form
@@ -96,79 +95,75 @@ export default function CheckoutPage() {
           style={{
             width: "100%",
             maxWidth: 480,
-            marginTop: 40,
+            marginTop: 36,
             display: "flex",
             flexDirection: "column",
             gap: 20,
           }}
         >
-          {/* Contact */}
-          <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", marginBottom: 4 }}>
-            CONTACT
+          <div style={{ fontSize: 13, fontWeight: 500, letterSpacing: "0.02em", marginBottom: 4 }}>
+            Contact
           </div>
           <div>
-            <label style={labelStyle}>EMAIL</label>
+            <label style={labelStyle}>Email</label>
             <input type="email" name="email" required style={inputStyle} placeholder="you@email.com" />
           </div>
           <div>
-            <label style={labelStyle}>PHONE</label>
+            <label style={labelStyle}>Phone</label>
             <input type="tel" name="phone" required style={inputStyle} placeholder="+94 7X XXX XXXX" />
           </div>
 
-          {/* Shipping */}
           <div
             style={{
               fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: "0.06em",
+              fontWeight: 500,
+              letterSpacing: "0.02em",
               marginTop: 16,
               marginBottom: 4,
             }}
           >
-            SHIPPING ADDRESS
+            Shipping address
           </div>
           <div className="checkout-grid-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={labelStyle}>FIRST NAME</label>
+              <label style={labelStyle}>First name</label>
               <input type="text" name="firstName" required style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>LAST NAME</label>
+              <label style={labelStyle}>Last name</label>
               <input type="text" name="lastName" required style={inputStyle} />
             </div>
           </div>
           <div>
-            <label style={labelStyle}>ADDRESS</label>
+            <label style={labelStyle}>Address</label>
             <input type="text" name="address" required style={inputStyle} />
           </div>
           <div className="checkout-grid-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={labelStyle}>CITY</label>
+              <label style={labelStyle}>City</label>
               <input type="text" name="city" required style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>POSTAL CODE</label>
+              <label style={labelStyle}>Postal code</label>
               <input type="text" name="postalCode" required style={inputStyle} />
             </div>
           </div>
 
-          {/* Payment */}
           <div
             style={{
               fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: "0.06em",
+              fontWeight: 500,
+              letterSpacing: "0.02em",
               marginTop: 16,
               marginBottom: 4,
             }}
           >
-            PAYMENT
+            Payment
           </div>
           <div
             style={{
               padding: "16px 0",
               fontSize: 13,
-              letterSpacing: "0.06em",
               color: "var(--text-muted)",
               display: "flex",
               alignItems: "center",
@@ -180,7 +175,7 @@ export default function CheckoutPage() {
                 width: 18,
                 height: 18,
                 borderRadius: "50%",
-                border: "2px solid var(--text)",
+                border: "1.5px solid var(--text)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -196,7 +191,7 @@ export default function CheckoutPage() {
                 }}
               />
             </span>
-            CASH ON DELIVERY
+            Cash on delivery
           </div>
 
           {/* Order Summary */}
@@ -211,12 +206,12 @@ export default function CheckoutPage() {
             <div
               style={{
                 fontSize: 13,
-                fontWeight: 600,
-                letterSpacing: "0.06em",
+                fontWeight: 500,
+                letterSpacing: "0.02em",
                 marginBottom: 16,
               }}
             >
-              ORDER SUMMARY
+              Order summary
             </div>
             {items.map((item) => (
               <div
@@ -225,7 +220,6 @@ export default function CheckoutPage() {
                   display: "flex",
                   justifyContent: "space-between",
                   fontSize: 12,
-                  letterSpacing: "0.06em",
                   color: "var(--text-muted)",
                   marginBottom: 8,
                 }}
@@ -233,7 +227,7 @@ export default function CheckoutPage() {
                 <span>
                   {item.name} ({item.size}) &times; {item.quantity}
                 </span>
-                <span>{formatPrice(item.price * item.quantity)}</span>
+                <span style={{ fontVariantNumeric: "tabular-nums" }}>{formatPrice(item.price * item.quantity)}</span>
               </div>
             ))}
             <div
@@ -241,27 +235,26 @@ export default function CheckoutPage() {
                 display: "flex",
                 justifyContent: "space-between",
                 fontSize: 12,
-                letterSpacing: "0.06em",
                 color: "var(--text-muted)",
                 marginTop: 12,
                 paddingTop: 12,
                 borderTop: "1px solid var(--border)",
               }}
             >
-              <span>SHIPPING</span>
-              <span>FREE</span>
+              <span>Shipping</span>
+              <span>Free</span>
             </div>
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
                 fontSize: 15,
-                fontWeight: 600,
-                letterSpacing: "0.06em",
+                fontWeight: 500,
                 marginTop: 16,
+                fontVariantNumeric: "tabular-nums",
               }}
             >
-              <span>TOTAL</span>
+              <span>Total</span>
               <span>{formatPrice(totalPrice)}</span>
             </div>
           </div>
@@ -273,15 +266,17 @@ export default function CheckoutPage() {
               width: "100%",
               height: 48,
               border: 0,
+              borderRadius: 6,
               background: submitting ? "var(--text-muted)" : "var(--btn-bg)",
               color: "var(--btn-text)",
               font: "500 13px 'IBM Plex Mono', monospace",
-              letterSpacing: "0.08em",
+              letterSpacing: "0.04em",
               cursor: submitting ? "default" : "pointer",
               marginTop: 8,
+              transition: "background 0.15s",
             }}
           >
-            {submitting ? "PROCESSING..." : "PLACE ORDER"}
+            {submitting ? "Processing..." : "PLACE ORDER"}
           </button>
         </form>
       </main>

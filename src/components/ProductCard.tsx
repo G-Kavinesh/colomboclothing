@@ -33,8 +33,8 @@ export default function ProductCard({ product }: { product: Product }) {
         style={{
           marginTop: 20,
           fontSize: 13,
-          fontWeight: 600,
-          letterSpacing: "0.06em",
+          fontWeight: 500,
+          letterSpacing: "0.04em",
           textAlign: "center",
         }}
       >
@@ -44,7 +44,7 @@ export default function ProductCard({ product }: { product: Product }) {
         style={{
           marginTop: 8,
           fontSize: 13,
-          fontWeight: 500,
+          fontWeight: 400,
           color: "var(--text-muted)",
         }}
       >

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function AccessibilityPage() {
   return (
-    <InfoPage title="ACCESSIBILITY">
+    <InfoPage title="Accessibility">
       <p style={{ margin: "0 0 20px" }}>
         Undefined Department is committed to making our website accessible to everyone.
         We follow WCAG 2.1 Level AA guidelines and continuously work to improve the

@@ -14,14 +14,14 @@ const cellStyle: React.CSSProperties = {
   padding: "10px 16px",
   textAlign: "center",
   fontSize: 13,
-  letterSpacing: "0.04em",
+  fontVariantNumeric: "tabular-nums",
 };
 
 const headerCellStyle: React.CSSProperties = {
   ...cellStyle,
-  fontWeight: 600,
+  fontWeight: 500,
   color: "var(--text)",
-  borderBottom: "2px solid var(--text)",
+  borderBottom: "1px solid var(--text)",
 };
 
 const bodyCellStyle: React.CSSProperties = {
@@ -81,7 +81,8 @@ export default function SizeGuide({
           overflow: "auto",
           padding: "40px 32px",
           position: "relative",
-          border: "1px solid var(--border)",
+          border: "1px solid var(--border-light)",
+          borderRadius: 12,
         }}
       >
         {/* Close */}
@@ -105,18 +106,18 @@ export default function SizeGuide({
           <span
             style={{
               position: "absolute",
-              width: 18,
-              height: 2,
-              background: "var(--text)",
+              width: 16,
+              height: 1.5,
+              background: "var(--text-muted)",
               transform: "rotate(45deg)",
             }}
           />
           <span
             style={{
               position: "absolute",
-              width: 18,
-              height: 2,
-              background: "var(--text)",
+              width: 16,
+              height: 1.5,
+              background: "var(--text-muted)",
               transform: "rotate(-45deg)",
             }}
           />
@@ -126,12 +127,12 @@ export default function SizeGuide({
           style={{
             margin: 0,
             fontSize: 15,
-            fontWeight: 600,
-            letterSpacing: "0.08em",
+            fontWeight: 500,
+            letterSpacing: "0.02em",
             textAlign: "center",
           }}
         >
-          SIZE GUIDE
+          Size guide
         </h2>
 
         <p
@@ -141,7 +142,6 @@ export default function SizeGuide({
             lineHeight: 1.6,
             color: "var(--text-muted)",
             textAlign: "center",
-            letterSpacing: "0.04em",
           }}
         >
           All measurements in centimetres. Oversize fit — if between sizes, size down for
@@ -152,17 +152,17 @@ export default function SizeGuide({
         <table
           style={{
             width: "100%",
-            marginTop: 28,
+            marginTop: 24,
             borderCollapse: "collapse",
             fontFamily: "'IBM Plex Mono', monospace",
           }}
         >
           <thead>
             <tr>
-              <th style={headerCellStyle}>SIZE</th>
-              <th style={headerCellStyle}>CHEST</th>
-              <th style={headerCellStyle}>LENGTH</th>
-              <th style={headerCellStyle}>SHOULDER</th>
+              <th style={headerCellStyle}>Size</th>
+              <th style={headerCellStyle}>Chest</th>
+              <th style={headerCellStyle}>Length</th>
+              <th style={headerCellStyle}>Shoulder</th>
             </tr>
           </thead>
           <tbody>
@@ -180,17 +180,17 @@ export default function SizeGuide({
         </table>
 
         {/* How to measure */}
-        <div style={{ marginTop: 28 }}>
+        <div style={{ marginTop: 24 }}>
           <h3
             style={{
               margin: "0 0 12px",
               fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: "0.08em",
+              fontWeight: 500,
+              letterSpacing: "0.02em",
               color: "var(--text)",
             }}
           >
-            HOW TO MEASURE
+            How to measure
           </h3>
           <div
             style={{
@@ -200,20 +200,19 @@ export default function SizeGuide({
               fontSize: 12,
               lineHeight: 1.6,
               color: "var(--text-muted)",
-              letterSpacing: "0.04em",
             }}
           >
             <div>
-              <span style={{ fontWeight: 500, color: "var(--text)" }}>CHEST</span> — Lay the garment
+              <span style={{ fontWeight: 500, color: "var(--text)" }}>Chest</span> — Lay the garment
               flat. Measure across the chest, 2.5 cm below the armhole seam. Double for full
               circumference.
             </div>
             <div>
-              <span style={{ fontWeight: 500, color: "var(--text)" }}>LENGTH</span> — From the
+              <span style={{ fontWeight: 500, color: "var(--text)" }}>Length</span> — From the
               highest point of the shoulder seam straight down to the hem.
             </div>
             <div>
-              <span style={{ fontWeight: 500, color: "var(--text)" }}>SHOULDER</span> — Seam to seam
+              <span style={{ fontWeight: 500, color: "var(--text)" }}>Shoulder</span> — Seam to seam
               across the back, measured flat.
             </div>
           </div>

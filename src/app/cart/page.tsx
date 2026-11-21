@@ -20,18 +20,18 @@ export default function CartPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "48px 20px 48px",
+          padding: "40px 20px 48px",
         }}
       >
         <h1
           style={{
             margin: 0,
             fontSize: 18,
-            fontWeight: 600,
-            letterSpacing: "0.08em",
+            fontWeight: 500,
+            letterSpacing: "0.02em",
           }}
         >
-          YOUR BAG
+          Your bag
         </h1>
 
         {items.length === 0 ? (
@@ -44,25 +44,25 @@ export default function CartPage() {
               gap: 24,
             }}
           >
-            <div style={{ fontSize: 13, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
-              YOUR BAG IS EMPTY
+            <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
+              Your bag is empty
             </div>
             <Link
               href="/"
               style={{
                 fontSize: 13,
                 fontWeight: 500,
-                letterSpacing: "0.08em",
+                letterSpacing: "0.02em",
                 color: "var(--text)",
                 borderBottom: "1px solid var(--text)",
                 paddingBottom: 2,
               }}
             >
-              CONTINUE SHOPPING
+              Continue shopping
             </Link>
           </div>
         ) : (
-          <div style={{ width: "100%", maxWidth: 680, marginTop: 40 }}>
+          <div style={{ width: "100%", maxWidth: 680, marginTop: 36 }}>
             {/* Items */}
             {items.map((item) => (
               <div
@@ -77,15 +77,8 @@ export default function CartPage() {
                   alignItems: "start",
                 }}
               >
-                {/* Image */}
                 <Link href={`/shop/${item.slug}`}>
-                  <div
-                    style={{
-                      position: "relative",
-                      width: 80,
-                      height: 80,
-                    }}
-                  >
+                  <div style={{ position: "relative", width: 80, height: 80 }}>
                     <Image
                       src={item.image}
                       alt={item.name}
@@ -95,21 +88,20 @@ export default function CartPage() {
                   </div>
                 </Link>
 
-                {/* Details */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                   <Link
                     href={`/shop/${item.slug}`}
                     style={{
                       fontSize: 13,
-                      fontWeight: 600,
-                      letterSpacing: "0.06em",
+                      fontWeight: 500,
+                      letterSpacing: "0.04em",
                       color: "var(--text)",
                     }}
                   >
                     {item.name}
                   </Link>
-                  <div style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--text-muted)" }}>
-                    SIZE: {item.size}
+                  <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
+                    Size: {item.size}
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8 }}>
                     <button
@@ -118,6 +110,7 @@ export default function CartPage() {
                         width: 28,
                         height: 28,
                         border: "1px solid var(--border-light)",
+                        borderRadius: 4,
                         background: "none",
                         cursor: "pointer",
                         font: "500 14px 'IBM Plex Mono', monospace",
@@ -129,7 +122,7 @@ export default function CartPage() {
                     >
                       &minus;
                     </button>
-                    <span style={{ fontSize: 13, fontWeight: 500, minWidth: 20, textAlign: "center" }}>
+                    <span style={{ fontSize: 13, fontWeight: 500, minWidth: 20, textAlign: "center", fontVariantNumeric: "tabular-nums" }}>
                       {item.quantity}
                     </span>
                     <button
@@ -138,6 +131,7 @@ export default function CartPage() {
                         width: 28,
                         height: 28,
                         border: "1px solid var(--border-light)",
+                        borderRadius: 4,
                         background: "none",
                         cursor: "pointer",
                         font: "500 14px 'IBM Plex Mono', monospace",
@@ -156,18 +150,16 @@ export default function CartPage() {
                         background: "none",
                         cursor: "pointer",
                         fontSize: 11,
-                        letterSpacing: "0.08em",
                         color: "var(--text-muted)",
                         marginLeft: 8,
                       }}
                     >
-                      REMOVE
+                      Remove
                     </button>
                   </div>
                 </div>
 
-                {/* Price */}
-                <div className="cart-item-price" style={{ fontSize: 13, fontWeight: 500, textAlign: "right" }}>
+                <div className="cart-item-price" style={{ fontSize: 13, fontWeight: 400, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
                   {formatPrice(item.price * item.quantity)}
                 </div>
               </div>
@@ -178,13 +170,13 @@ export default function CartPage() {
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                padding: "32px 0",
+                padding: "28px 0",
                 fontSize: 15,
-                fontWeight: 600,
-                letterSpacing: "0.06em",
+                fontWeight: 500,
+                fontVariantNumeric: "tabular-nums",
               }}
             >
-              <span>TOTAL</span>
+              <span>Total</span>
               <span>{formatPrice(totalPrice)}</span>
             </div>
 
@@ -206,11 +198,12 @@ export default function CartPage() {
                   width: "100%",
                   maxWidth: 400,
                   height: 48,
+                  borderRadius: 6,
                   background: "var(--btn-bg)",
                   color: "var(--btn-text)",
                   fontSize: 13,
                   fontWeight: 500,
-                  letterSpacing: "0.08em",
+                  letterSpacing: "0.04em",
                   textDecoration: "none",
                 }}
               >
@@ -220,13 +213,12 @@ export default function CartPage() {
                 href="/"
                 style={{
                   fontSize: 12,
-                  letterSpacing: "0.08em",
                   color: "var(--text-muted)",
                   borderBottom: "1px solid var(--border-light)",
                   paddingBottom: 2,
                 }}
               >
-                CONTINUE SHOPPING
+                Continue shopping
               </Link>
             </div>
           </div>

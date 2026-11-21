@@ -8,17 +8,17 @@ const inputStyle: React.CSSProperties = {
   height: 44,
   padding: "0 12px",
   border: "1px solid var(--border-light)",
+  borderRadius: 6,
   background: "transparent",
   font: "400 13px 'IBM Plex Mono', monospace",
-  letterSpacing: "0.04em",
   color: "var(--text)",
   boxSizing: "border-box",
 };
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 500,
-  letterSpacing: "0.08em",
+  fontSize: 12,
+  fontWeight: 400,
+  letterSpacing: "0.02em",
   color: "var(--text-muted)",
   marginBottom: 6,
   display: "block",
@@ -34,7 +34,7 @@ export default function OrderStatusPage() {
   };
 
   return (
-    <InfoPage title="ORDER STATUS">
+    <InfoPage title="Order status">
       <p style={{ marginTop: 0 }}>
         Enter your order number and email to check the status of your order.
       </p>
@@ -49,7 +49,7 @@ export default function OrderStatusPage() {
         }}
       >
         <div>
-          <label style={labelStyle}>ORDER NUMBER</label>
+          <label style={labelStyle}>Order number</label>
           <input
             type="text"
             name="orderNumber"
@@ -64,7 +64,7 @@ export default function OrderStatusPage() {
           />
         </div>
         <div>
-          <label style={labelStyle}>EMAIL</label>
+          <label style={labelStyle}>Email</label>
           <input
             type="email"
             name="email"
@@ -79,10 +79,11 @@ export default function OrderStatusPage() {
             width: "100%",
             height: 48,
             border: 0,
+            borderRadius: 6,
             background: "var(--btn-bg)",
             color: "var(--btn-text)",
             font: "500 13px 'IBM Plex Mono', monospace",
-            letterSpacing: "0.08em",
+            letterSpacing: "0.04em",
             cursor: "pointer",
             marginTop: 8,
           }}
@@ -96,32 +97,32 @@ export default function OrderStatusPage() {
           style={{
             marginTop: 32,
             padding: 24,
-            border: "1px solid var(--border)",
+            border: "1px solid var(--border-light)",
+            borderRadius: 8,
           }}
         >
           <div
             style={{
               fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: "0.06em",
+              fontWeight: 500,
               color: "var(--text)",
               marginBottom: 16,
+              fontVariantNumeric: "tabular-nums",
             }}
           >
-            ORDER {orderNumber.toUpperCase()}
+            Order {orderNumber.toUpperCase()}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <StatusStep label="ORDER PLACED" done />
-            <StatusStep label="PAYMENT CONFIRMED" done />
-            <StatusStep label="PREPARING" done />
-            <StatusStep label="SHIPPED" active />
-            <StatusStep label="DELIVERED" />
+            <StatusStep label="Order placed" done />
+            <StatusStep label="Payment confirmed" done />
+            <StatusStep label="Preparing" done />
+            <StatusStep label="Shipped" active />
+            <StatusStep label="Delivered" />
           </div>
           <div
             style={{
               marginTop: 20,
               fontSize: 12,
-              letterSpacing: "0.06em",
               color: "var(--text-muted)",
             }}
           >
@@ -146,20 +147,19 @@ function StatusStep({
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
       <div
         style={{
-          width: 10,
-          height: 10,
+          width: 8,
+          height: 8,
           borderRadius: "50%",
-          background: done || active ? "var(--text)" : "var(--border-light)",
+          background: done || active ? "var(--text)" : "var(--dot-inactive)",
           border: active ? "2px solid var(--text)" : "none",
-          boxShadow: active ? "0 0 0 3px var(--overlay)" : "none",
+          boxSizing: active ? "content-box" : "border-box",
         }}
       />
       <span
         style={{
           fontSize: 12,
-          letterSpacing: "0.08em",
           color: done || active ? "var(--text)" : "var(--text-muted)",
-          fontWeight: active ? 600 : 400,
+          fontWeight: active ? 500 : 400,
         }}
       >
         {label}

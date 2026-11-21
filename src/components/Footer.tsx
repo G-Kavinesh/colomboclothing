@@ -4,12 +4,12 @@ export default function Footer() {
   return (
     <footer
       style={{
-        borderTop: "2px solid var(--border)",
-        padding: "48px 20px 40px",
+        borderTop: "1px solid var(--border-light)",
+        padding: "40px 20px 36px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 32,
+        gap: 24,
       }}
     >
       <nav
@@ -18,17 +18,17 @@ export default function Footer() {
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "center",
-          gap: "16px 48px",
-          fontSize: 15,
-          letterSpacing: "0.04em",
+          gap: "12px 32px",
+          fontSize: 13,
+          letterSpacing: "0.02em",
         }}
       >
-        <Link href="/contact">CONTACT</Link>
-        <Link href="/terms">TERMS</Link>
-        <Link href="/privacy">PRIVACY</Link>
-        <Link href="/accessibility">ACCESSIBILITY</Link>
-        <Link href="/cookies">COOKIES</Link>
-        <Link href="/preorder/status">ORDER STATUS</Link>
+        <Link href="/contact">Contact</Link>
+        <Link href="/terms">Terms</Link>
+        <Link href="/privacy">Privacy</Link>
+        <Link href="/accessibility">Accessibility</Link>
+        <Link href="/cookies">Cookies</Link>
+        <Link href="/preorder/status">Order status</Link>
       </nav>
     </footer>
   );
