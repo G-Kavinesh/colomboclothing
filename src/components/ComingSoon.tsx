@@ -75,7 +75,7 @@ export default function ComingSoon() {
           gap: 24,
           fontSize: 11,
           letterSpacing: "0.02em",
-          color: "var(--text-muted)",
+          color: "#1a1714",
         }}
       >
         <span>&copy; {new Date().getFullYear()} Undefined Department</span>
